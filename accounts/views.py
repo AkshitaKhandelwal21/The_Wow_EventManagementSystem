@@ -117,7 +117,12 @@ class LoginView(TemplateView):
         user_login = authenticate(request, email=email, password=password)
         if user_login:
             login(request, user_login)
-            return HttpResponse("User Logged In")
+            if user.role=="admin":
+                return render(request, template_name='admin/admin_dashboard.html')
+            elif user.role=="user":
+                return render(request, template_name='user/user_dashboard.html')
+            elif user.role=="organizer":
+                return render(request, template_name='organizer/organizer_dashboard.html')
         
         return render(request, self.template_name, {'form': LoginForm()})
     
