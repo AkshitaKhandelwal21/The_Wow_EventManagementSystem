@@ -24,11 +24,14 @@ class CustomUser(AbstractUser, TimeStamps):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20)
-    email_verified = models.BooleanField(default=False)
     role = models.CharField(max_length=50, choices=RoleChoices, default=RoleChoices.USER)
     profile_photo = models.ImageField(upload_to='profile_pictures', blank=True, null=True)
+
+    email_verified = models.BooleanField(default=False)
+    email_verification_token = models.CharField(max_length=100, blank=True, null=True)
+    email_verification_sent_at = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    objects = UserManager
+    objects = UserManager()
