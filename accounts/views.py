@@ -127,3 +127,6 @@ class LogoutView(LoginRequiredMixin ,TemplateView):
         logout(request)
         return redirect('login')
     
+
+class ForgotPasswordView(TemplateView):
+    template_name = 'forgotPassword.html'
