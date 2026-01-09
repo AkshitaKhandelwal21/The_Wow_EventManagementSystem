@@ -60,7 +60,7 @@ ROOT_URLCONF = 'The_Wow.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,6 +111,9 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+TOKEN_EXPIRY_HOURS = os.getenv('TOKEN_EXPIRY_HOURS')
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/

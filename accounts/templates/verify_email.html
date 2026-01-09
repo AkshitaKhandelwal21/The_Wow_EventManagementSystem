@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email - EventHub</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+
+    <div
+        style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 500px; width: 100%; padding: 50px 40px; backdrop-filter: blur(10px); text-align: center;">
+
+        <!-- Animated Email Icon -->
+        <div style="position: relative; display: inline-block; margin-bottom: 30px;">
+            <div
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); animation: pulse 2s infinite;">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+            </div>
+            <!-- Check mark badge -->
+            <div
+                style="position: absolute; bottom: -5px; right: -5px; background: #10b981; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 4px solid white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Heading -->
+        <h1 style="margin: 0 0 15px; color: #2d3748; font-size: 32px; font-weight: 700;">Verify Your Email</h1>
+
+        <!-- Description -->
+        <p style="margin: 0 0 30px; color: #718096; font-size: 16px; line-height: 1.6;">
+            We've sent a verification email to
+        </p>
+
+        <!-- Email Display -->
+        <div
+            style="background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px 20px; margin-bottom: 30px; display: inline-block;">
+            <p id="userEmail" style="margin: 0; color: #667eea; font-size: 16px; font-weight: 600;">{{ email }}</p>
+        </div>
+
+        <!-- Instructions -->
+        <div
+            style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 12px; padding: 20px; margin-bottom: 30px; text-align: left;">
+            <p style="margin: 0 0 15px; color: #2d3748; font-size: 14px; font-weight: 600;">📧 Check your inbox</p>
+            <ul style="margin: 0; padding-left: 20px; color: #4a5568; font-size: 14px; line-height: 1.8;">
+                <li>Click the verification link in the email</li>
+                <li>Check your spam folder if you don't see it</li>
+            </ul>
+        </div>
+
+        <!-- Resend Button -->
+        <form action="{% url 'resend-verification-link' %}" method="POST">
+            {% csrf_token %}
+            <button id="resendBtn"
+                style="width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); margin-bottom: 15px;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)'">
+                Resend Verification Email
+            </button>
+        </form>
+
+        <!-- Timer Display -->
+        <p id="timerText" style="margin: 0 0 20px; color: #a0aec0; font-size: 13px; display: none;">
+            You can resend the email in <span id="countdown" style="font-weight: 600; color: #667eea;">60</span> seconds
+        </p>
+
+        <!-- Change Email Link -->
+        <a href="#" onclick="changeEmail(); return false;"
+            style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-block; margin-bottom: 30px;">
+            Wrong email? Change it
+        </a>
+
+        <!-- Back to Login -->
+        <div style="margin-top: 25px;">
+            <a href="#"
+                style="color: #4a5568; text-decoration: none; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 5px;"
+                onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#4a5568'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Login
+            </a>
+        </div>
+    </div>
+
+    <style>
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+    </style>
+</body>
+
+</html>

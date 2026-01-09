@@ -1,10 +1,23 @@
 import uuid
 from django.core.mail import send_mail
+from django.utils import timezone
+from datetime import timedelta
 from The_Wow import settings
+from accounts.models import EmailVerificationToken
 
 
-def generate_verification_token():
-    return str(uuid.uuid4())
+def create_verification_token(user):
+     
+    EmailVerificationToken.objects.filter(
+          user = user, is_blacklisted=False
+     ).update(is_blacklisted=True)
+
+    return EmailVerificationToken.objects.create(
+         user=user, 
+         token=uuid.uuid4().hex, 
+         expires_at=timezone.now() + timedelta(settings.TOKEN_EXPIRY_HOURS)
+    )
+
 
 def send_email(user):
         verify_url = f'http://127.0.0.1:9000/verify/{user.email_verification_token}'

@@ -2,13 +2,13 @@ from django.utils import timezone
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView, FormView
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
 from accounts.forms import LoginForm, RegistrationForm
 from accounts.models import CustomUser
-from django.core.mail import send_mail
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from accounts.utils import generate_verification_token, send_email
+from accounts.utils import create_verification_token, send_email
 
 # Create your views here.
 class SignupView(TemplateView):
@@ -26,13 +26,23 @@ class SignupView(TemplateView):
         if form.is_valid():
             user = form.save(commit=False)
             
-            user.email_verification_token = generate_verification_token()
+            user.email_verification_token = create_verification_token(user)
             user.email_verification_sent_at = timezone.now()
             user.save()
+            request.session['email'] = user.email
             send_email(user)
-            return HttpResponse("Please verify the email")
+            return redirect('verify-email')
         
         return self.render_to_response({'form': form})
+
+
+class VerifyEmailPageView(TemplateView):
+    template_name = 'verify_email.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['email'] = self.request.session.get('email')
+        return context
 
 
 class SendEmailVerificationView(TemplateView):
@@ -49,6 +59,32 @@ class SendEmailVerificationView(TemplateView):
             user.save()
             
         return redirect('login')   
+
+
+class ResendVerificationLink(TemplateView):
+    template_name = 'verify_email.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['email'] = self.request.session.get('email')
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        email = request.session.get('email')
+        user = CustomUser.objects.filter(email=email).first()
+        print("User: ", user)
+        if not user:
+            return redirect('signup')
+        
+        if not user.email_verified:
+            print("verifying email")
+            user.email_verification_token = generate_verification_token()
+            user.email_verification_sent_at = timezone.now()
+            user.save()
+            send_email(user)
+            return redirect('verify-email')
+        
+        return redirect('signup')
 
 
 class LoginView(TemplateView):  
@@ -78,3 +114,10 @@ class LoginView(TemplateView):
             return HttpResponse("User Logged In")
         
         return render(request, self.template_name, {'form': LoginForm()})
+    
+
+class LogoutView(LoginRequiredMixin ,TemplateView):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect('login')
+    
