@@ -9,4 +9,5 @@ urlpatterns = [
     path('verify/', views.VerifyEmailPageView.as_view(), name='verify-email'),
     path('resend-verification/', views.ResendVerificationLink.as_view(), name='resend-verification-link'),
     path('verify/<str:token>/', views.SendEmailVerificationView.as_view(), name='email-verification'),
+    path('forgot-password/', views.ForgotPasswordView.as_view(), name='forgot-password'),
 ]
