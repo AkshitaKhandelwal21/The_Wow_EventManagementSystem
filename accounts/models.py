@@ -28,8 +28,8 @@ class CustomUser(AbstractUser, TimeStamps):
     profile_photo = models.ImageField(upload_to='profile_pictures', blank=True, null=True)
 
     email_verified = models.BooleanField(default=False)
-    email_verification_token = models.CharField(max_length=100, blank=True, null=True)
-    email_verification_sent_at = models.DateTimeField(default=timezone.now)
+    # email_verification_token = models.CharField(max_length=100, blank=True, null=True)
+    # email_verification_sent_at = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -38,7 +38,7 @@ class CustomUser(AbstractUser, TimeStamps):
 
 
 class EmailVerificationToken(models.Model):
-    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE, related_name='email_token')
+    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
     token = models.CharField(max_length=64, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()

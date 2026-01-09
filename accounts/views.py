@@ -5,7 +5,7 @@ from django.views.generic import TemplateView, FormView
 from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
 from accounts.forms import LoginForm, RegistrationForm
-from accounts.models import CustomUser
+from accounts.models import CustomUser, EmailVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from accounts.utils import create_verification_token, send_email
@@ -25,12 +25,13 @@ class SignupView(TemplateView):
 
         if form.is_valid():
             user = form.save(commit=False)
-            
-            user.email_verification_token = create_verification_token(user)
-            user.email_verification_sent_at = timezone.now()
             user.save()
+            token_obj = create_verification_token(user)
+            # user.email_verification_token = create_verification_token(user)
+            # user.email_verification_sent_at = timezone.now()
+            # user.save()
             request.session['email'] = user.email
-            send_email(user)
+            send_email(user, token_obj.token)
             return redirect('verify-email')
         
         return self.render_to_response({'form': form})
@@ -50,10 +51,17 @@ class SendEmailVerificationView(TemplateView):
     def get(self, request, *args, **kwargs):
         # context = super().get_context_data(**kwargs)
         token = kwargs.get('token')
-        user = CustomUser.objects.filter(email_verification_token=token).first()
-        if not user:
-            return redirect('signup')
+
+        token_obj = EmailVerificationToken.objects.select_related('user').filter(
+            token=token, 
+            is_blacklisted=False
+        ).first()
+
+        if not token_obj:
+            return HttpResponse("Invalid token")
         
+        user = token_obj.user
+
         if not user.email_verified:
             user.email_verified = True
             user.save()
@@ -78,10 +86,8 @@ class ResendVerificationLink(TemplateView):
         
         if not user.email_verified:
             print("verifying email")
-            user.email_verification_token = generate_verification_token()
-            user.email_verification_sent_at = timezone.now()
-            user.save()
-            send_email(user)
+            token_obj = create_verification_token(user)
+            send_email(user, token_obj.token)
             return redirect('verify-email')
         
         return redirect('signup')

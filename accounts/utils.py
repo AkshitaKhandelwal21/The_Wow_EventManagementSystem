@@ -12,15 +12,17 @@ def create_verification_token(user):
           user = user, is_blacklisted=False
      ).update(is_blacklisted=True)
 
-    return EmailVerificationToken.objects.create(
+    token_obj = EmailVerificationToken.objects.create(
          user=user, 
          token=uuid.uuid4().hex, 
-         expires_at=timezone.now() + timedelta(settings.TOKEN_EXPIRY_HOURS)
+         expires_at=timezone.now() + timedelta(int(settings.TOKEN_EXPIRY_HOURS))
     )
 
+    return token_obj
 
-def send_email(user):
-        verify_url = f'http://127.0.0.1:9000/verify/{user.email_verification_token}'
+
+def send_email(user, token):
+        verify_url = f'http://127.0.0.1:9000/verify/{token}'
         try:
             subject = "Verify your account"
             message = f"Hi {user.name}, thank you for registering in The-Wow. \
