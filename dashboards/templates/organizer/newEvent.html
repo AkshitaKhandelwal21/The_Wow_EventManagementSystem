@@ -20,7 +20,7 @@
             </div>
             <h1 style="margin: 0; color: white; font-size: 28px; font-weight: 700;">Create New Event</h1>
         </div>
-        <a href="#"
+        <a href="{% url 'org-dashboard' %}"
             style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 10px; color: white; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s;"
             onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'"
             onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
@@ -40,8 +40,8 @@
             </div>
         </div>
 
-         <form style="padding: 40px;">
-
+         <form style="padding: 40px;" method="POST", enctype="multipart/form-data">
+            {% csrf_token %}
             <!-- Event Image Upload -->
             <div style="margin-bottom: 30px;">
                 <label
@@ -124,7 +124,7 @@
                     style="padding: 14px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);"
                     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)'"
                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)'">
-                    Continue to Details →
+                    Submit →
                 </button>
             </div>
         </form>
