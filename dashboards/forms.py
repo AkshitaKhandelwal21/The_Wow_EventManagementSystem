@@ -17,5 +17,13 @@ class CreateEventForm(forms.ModelForm):
             'venue': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Where is the event'
-            })
+            }),
+            'date': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+            'time': forms.TimeInput(attrs={
+                'type': 'time',
+                'class': 'form-control'
+            }),
         }
