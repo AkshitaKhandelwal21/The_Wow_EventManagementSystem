@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizer Dashboard - EventHub</title>
+    <title>Organizer Dashboard: The-Wow</title>
 </head>
 
 <body
@@ -35,7 +35,7 @@
                 <span style="font-size: 20px;">📊</span>
                 <span style="font-weight: 600; font-size: 15px;">Dashboard</span>
             </a>
-            <a href="{% url 'my_events'}"
+            <a href="{% url 'my_events' %}"
                 style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
                 <span style="font-size: 20px;">🎫</span>
                 <span style="font-weight: 600; font-size: 15px;">My Events</span>
@@ -68,11 +68,11 @@
             <div style="display: flex; align-items: center; gap: 12px;">
                 <div
                     style="width: 42px; height: 42px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #667eea; font-size: 16px;">
-                    JD</div>
+                    {{ request.user.name|slice:":1"}}</div>
                 <div style="flex: 1; min-width: 0;">
                     <p
                         style="margin: 0; color: white; font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        John Doe</p>
+                        {{request.user.name}}</p>
                     <p style="margin: 0; color: rgba(255, 255, 255, 0.7); font-size: 12px;">Organizer</p>
                 </div>
             </div>
