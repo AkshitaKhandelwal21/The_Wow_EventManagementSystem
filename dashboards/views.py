@@ -1,13 +1,22 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from dashboards.forms import CreateEventForm
+from dashboards.forms import CreateEventForm, EditEventForm
 from .models import Event, EventRegistration
 
 # Create your views here.
 
 class OrganizerDashboardView(TemplateView):
     template_name = 'organizer/organizer_dashboard.html'
+
+
+class UserDashboardView(TemplateView):
+    template_name = "user/user_dashboard.html"
+
+
+class AdmindashboardView(TemplateView):
+    template_name = "admin/admin_dashboard.html"
 
 
 class CreateEventView(LoginRequiredMixin, TemplateView):
@@ -46,4 +55,46 @@ class ViewEvent(LoginRequiredMixin, TemplateView):
         context['event'] = get_object_or_404(
             Event.objects.select_related('user'), id=event_id
         )
+        return context
+    
+
+class EditEventView(TemplateView):
+    template_name = 'organizer/editEvent.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        context['form'] = EditEventForm(instance=event)
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        form = EditEventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            form.save()
+            return redirect('my_events')
+        return self.render_to_response({'form': form})
+    
+
+class DeleteEventView(LoginRequiredMixin, View):
+    model = Event
+    success_url = reverse_lazy('my_events')
+    
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['event'] = get_object_or_404(Event, pk=self.kwargs['pk'])
+    #     return context
+
+    def post(self, request, *args, **kwargs):
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        event.delete()
+        return redirect('my_events')
+    
+
+class AllEventsView(TemplateView):
+    template_name = 'user/all_events.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['events'] = Event.objects.all()
         return context

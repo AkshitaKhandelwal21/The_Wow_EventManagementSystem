@@ -118,11 +118,11 @@ class LoginView(TemplateView):
         if user_login:
             login(request, user_login)
             if user.role=="admin":
-                return render(request, template_name='admin/admin_dashboard.html')
+                return redirect('admin_dashboard')
             elif user.role=="user":
-                return render(request, template_name='user/user_dashboard.html')
+                return redirect('user-dashboard')
             elif user.role=="organizer":
-                return render(request, template_name='organizer/organizer_dashboard.html')
+                return redirect('org-dashboard')
         
         return render(request, self.template_name, {'form': LoginForm()})
     
