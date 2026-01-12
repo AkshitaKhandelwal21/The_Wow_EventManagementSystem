@@ -1,14 +1,14 @@
 from django.utils import timezone
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import TemplateView, FormView
 from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
-from accounts.forms import LoginForm, RegistrationForm
-from accounts.models import CustomUser, EmailVerificationToken
+from accounts.forms import ForgotPasswordForm, LoginForm, RegistrationForm, ResetPasswordForm
+from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from accounts.utils import create_verification_token, send_email
+from accounts.utils import create_password_verification_token, create_verification_token, send_email, send_pass_reset_mail
 
 # Create your views here.
 class SignupView(TemplateView):
@@ -135,3 +135,57 @@ class LogoutView(LoginRequiredMixin ,TemplateView):
 
 class ForgotPasswordView(TemplateView):
     template_name = 'forgotPassword.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ForgotPasswordForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            print(email)
+            user = CustomUser.objects.filter(email=email).first()
+            # print(user.email)
+
+            # if not user:
+            #     return redirect('signup')
+            
+            token_obj = create_password_verification_token(user)
+            send_pass_reset_mail(user, token_obj.token)
+            return HttpResponse("Click on the link to change password")
+        
+        return self.render_to_response({'form': form})
+
+
+class ResetPasswordView(TemplateView):
+    template_name = 'reset_password.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        token = self.kwargs['token']
+        context['form'] = ResetPasswordForm()
+        context['token'] = token
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = ResetPasswordForm(request.POST)
+        token = self.kwargs['token']
+        token_obj = PasswordVerificationToken.objects.select_related('user').filter(
+            token=token, is_blacklisted=False
+        ).first()
+
+        if form.is_valid():
+            user = token_obj.user
+            password = form.cleaned_data['password1']
+            user.set_password(password)
+            user.save()
+            token_obj.is_blacklisted = True
+            token_obj.save()
+
+            return redirect('login')
+        return self.render_to_response({'form': form})
+
+    
+    
