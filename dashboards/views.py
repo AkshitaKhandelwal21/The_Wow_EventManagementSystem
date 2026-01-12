@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, View
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboards.forms import CreateEventForm, EditEventForm
 from .models import Event, EventRegistration
@@ -51,7 +52,7 @@ class ViewEvent(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        event_id = self.kwargs['id']
+        event_id = self.kwargs['pk']
         context['event'] = get_object_or_404(
             Event.objects.select_related('user'), id=event_id
         )
@@ -98,3 +99,25 @@ class AllEventsView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['events'] = Event.objects.all()
         return context
+
+
+class UserRegisterView(TemplateView):
+    template_name = 'organizer/view_event.html'
+
+    def post(self, request, *args, **kwargs):
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        register, created = EventRegistration.objects.get_or_create(
+            user=request.user, event=event
+        )
+        if created:
+            messages.success(request, "You have successfully registered for this event")
+            if event.seats:
+                event.seats -= 1
+                event.save(update_fields=['seats'])
+        else:
+            messages.info(request, "You are already registered for this event")
+
+        return redirect('view_event', pk=event.pk)   
+    # Redirect to registered events page
+
+

@@ -31,7 +31,6 @@
     <!-- Main Container -->
     <div
         style="max-width: 900px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); overflow: hidden;">
-
         <!-- Status Banner -->
         <div
             style="background: #fef3c7; padding: 15px 40px; border-bottom: 2px solid #fbbf24; display: flex; align-items: center; gap: 12px;">
@@ -52,21 +51,10 @@
 
             <!-- Current Event Image Display -->
             <div style="margin-bottom: 30px;">
-                <label
-                    style="display: block; margin-bottom: 10px; color: #2d3748; font-size: 16px; font-weight: 600;">Current
-                    Event Cover Image</label>
-                <div style="position: relative; border-radius: 12px; overflow: hidden; margin-bottom: 15px;">
-                    <img src="{{ event.image.url }}" alt="Current Event Image"
-                        style="width: 100%; height: 250px; object-fit: cover; display: block;">
-                    <div
-                        style="position: absolute; top: 10px; right: 10px; background: rgba(0, 0, 0, 0.7); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-                        Current Image</div>
-                </div>
-
                 <!-- Upload New Image -->
                 <label
-                    style="display: block; margin-bottom: 10px; color: #2d3748; font-size: 16px; font-weight: 600;">Upload
-                    New Cover Image (Optional)</label>
+                    style="display: block; margin-bottom: 10px; color: #2d3748; font-size: 16px; font-weight: 600;">Need
+                    New Cover Image? (Optional)</label>
                 <div id="imageUpload"
                     style="border: 3px dashed #cbd5e0; border-radius: 12px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s; background: #f7fafc;"
                     onmouseover="this.style.borderColor='#667eea'; this.style.background='#edf2f7'"

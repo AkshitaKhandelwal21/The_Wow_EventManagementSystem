@@ -24,6 +24,9 @@ class Event(TimeStamps, models.Model):
     venue = models.CharField(max_length=200)
     date = models.DateField()
     time = models.TimeField()
+    duration = models.IntegerField(default=2)
+    address = models.CharField(max_length=500, null=True)
+    seats = models.IntegerField(null=True)
     image = models.ImageField(upload_to='events/', blank=True)
 
     class Meta:
@@ -45,3 +48,5 @@ class EventRegistration(TimeStamps, models.Model):
                 name="unique_event_registration"
             )
         ]
+
+
