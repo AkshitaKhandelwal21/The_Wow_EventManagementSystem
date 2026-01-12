@@ -46,3 +46,14 @@ class EmailVerificationToken(models.Model):
 
     def is_expired(self):
         return timezone.now() > self.expires_at
+    
+
+class PasswordVerificationToken(models.Model):
+    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    token = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_blacklisted = models.BooleanField(default=False)
+
+    def is_expired(self):
+        return timezone.now() > self.expires_at

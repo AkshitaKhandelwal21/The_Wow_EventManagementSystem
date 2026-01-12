@@ -49,3 +49,19 @@ class LoginForm(forms.Form):
 class ForgotPasswordForm(forms.Form):
     email = forms.CharField()
     
+
+class ResetPasswordForm(forms.ModelForm):
+    password1 = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = CustomUser
+        fields = ['password1', 'password2']
+        widgets = {
+            'password1': forms.PasswordInput(attrs={
+                'class': 'form-control'
+            }),
+            'password2': forms.PasswordInput(attrs={
+                'class': 'form-control'
+            })
+        }
