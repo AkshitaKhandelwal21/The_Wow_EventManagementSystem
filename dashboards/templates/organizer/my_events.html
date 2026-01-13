@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Events</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f7fafc; min-height: 100vh;">
+
+    <!-- Top Navigation Bar -->
+    <nav style="background: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 100;">
+        <div
+            style="max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; height: 70px;">
+
+            <!-- Logo -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 24px;">🎉</span>
+                </div>
+                <h2 style="margin: 0; color: #2d3748; font-size: 22px; font-weight: 700;">The-Wow</h2>
+            </div>
+
+            <!-- Right Menu -->
+            <div style="display: flex; align-items: center; gap: 25px;">
+                <a href="{% url 'org-dashboard' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Dashboard</a>
+                <a href="#" style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 15px;">My
+                    Events</a>
+                <a href="#"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Analytics</a>
+                <a href="{% url 'new_event' %}"
+                    style="display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 14px;">
+                    <span>➕</span>
+                    <span>Create Event</span>
+                </a>
+                <div style="position: relative; display: inline-block;">
+                    <!-- Avatar -->
+                    <div id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-weight: 700; cursor: pointer;">
+                        {{ request.user.name|slice:":1"|upper }}
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div id="userDropdown" style="display: none; position: absolute; right: 0; margin-top: 10px;
+        background: white; border-radius: 12px; width: 180px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden; z-index: 1000;">
+
+                        <a href="" style="display: block; padding: 12px 16px; color: #2d3748;
+            text-decoration: none; font-size: 14px;">
+                            👤 Profile
+                        </a>
+                        <a href="{% url 'logout' %}" style="display: block; padding: 12px 16px; color: #2d3748;
+            text-decoration: none; font-size: 14px;">
+                            🚪 Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div style="max-width: 1400px; margin: 0 auto; padding: 40px;">
+
+        <!-- Page Header -->
+        <div style="margin-bottom: 35px;">
+            <h1 style="margin: 0 0 10px; color: #2d3748; font-size: 36px; font-weight: 700;">My Events</h1>
+            <p style="margin: 0; color: #718096; font-size: 16px;">Manage and track all your created events</p>
+        </div>
+
+        <!-- Filters and Search Bar -->
+        <div
+            style="background: white; border-radius: 16px; padding: 25px 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+
+            <!-- Left Side Filters -->
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <select
+                    style="padding: 12px 18px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
+                    <option>All Events</option>
+                    <option>Published</option>
+                    <option>Draft</option>
+                    <option>Upcoming</option>
+                    <option>Past</option>
+                    <option>Cancelled</option>
+                </select>
+
+                <select
+                    style="padding: 12px 18px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
+                    <option>All Categories</option>
+                    <option>Music & Concerts</option>
+                    <option>Sports & Fitness</option>
+                    <option>Technology</option>
+                    <option>Arts & Culture</option>
+                    <option>Food & Dining</option>
+                    <option>Business</option>
+                </select>
+
+                <select
+                    style="padding: 12px 18px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
+                    <option>Sort by: Latest</option>
+                    <option>Sort by: Date</option>
+                    <option>Sort by: Name</option>
+                    <option>Sort by: Attendees</option>
+                </select>
+            </div>
+
+            <!-- Search Bar -->
+            <div style="position: relative; flex: 1; min-width: 250px; max-width: 400px;">
+                <input type="text" placeholder="Search events..."
+                    style="width: 100%; padding: 12px 18px 12px 45px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; box-sizing: border-box;">
+                <span
+                    style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #a0aec0; font-size: 18px;">🔍</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Event Card Template (for backend integration reference) -->
+    {% if events %}
+    {% for event in events %}
+    <div
+        style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; transition: all 0.3s; margin-bottom: 24px;">
+
+        <!-- Event Image -->
+        {% if event.image %}
+        <div
+            style="position: relative; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden;">
+
+            <img src="{{ event.image.url }}" alt="{{ event.title }}"
+                style="width: 100%; height: 100%; object-fit: cover;">
+
+            <!-- Status Badge -->
+            <span
+                style="position: absolute; top: 15px; right: 15px; background: #10b981; color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                Published
+            </span>
+        </div>
+        {% endif %}
+
+        <!-- Event Details -->
+        <div style="padding: 20px;">
+
+            <!-- Category Badge -->
+            <span
+                style="display: inline-block; background: #edf2f7; color: #667eea; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 12px;">
+                {{ event.category }}
+            </span>
+
+            <!-- Title -->
+            <h3 style="margin: 0 0 12px; color: #2d3748; font-size: 18px; font-weight: 700; line-height: 1.4;">
+                {{ event.title }}
+            </h3>
+
+            <!-- Date & Time -->
+            <div
+                style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: #718096; font-size: 14px;">
+                <span style="font-size: 16px;">📅</span>
+                <span>{{ event.date }} at {{ event.time }}</span>
+            </div>
+
+            <!-- Location -->
+            <div
+                style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px; color: #718096; font-size: 14px;">
+                <span style="font-size: 16px;">📍</span>
+                <span>{{ event.venue }}</span>
+            </div>
+
+            <!-- Stats (placeholders for now) -->
+            <div
+                style="display: flex; justify-content: space-between; padding-top: 15px; border-top: 2px solid #e2e8f0; margin-bottom: 15px;">
+                <div style="text-align: center;">
+                    <p style="margin: 0 0 4px; font-weight: 700; font-size: 18px;">0</p>
+                    <p style="margin: 0; font-size: 12px;">Attendees</p>
+                </div>
+                <div style="text-align: center;">
+                    <p style="margin: 0 0 4px; font-weight: 700; font-size: 18px;">$0</p>
+                    <p style="margin: 0; font-size: 12px;">Revenue</p>
+                </div>
+                <div style="text-align: center;">
+                    <p style="margin: 0 0 4px; font-weight: 700; font-size: 18px;">—</p>
+                    <p style="margin: 0; font-size: 12px;">Rating</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 10px;">
+                <a href="{% url 'edit_event' event.pk %}"
+                    style="flex: 1; padding: 10px; background: #667eea; color: white; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600;">
+                    Edit
+                </a>
+                <a href="{% url 'view_event' event.pk %}"
+                    style="flex: 1; padding: 10px; background: #f7fafc; color: #4a5568; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">
+                    View
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div
+        style="display: flex; align-items: center; justify-content: center; flex-direction: column; height: 100%; text-align: center; gap: 20px;">
+        <p style="text-align: center;">You haven't created any events yet.</p>
+        <a href="{% url 'new_event' %}"
+            style="gap: 8px; padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 14px; display: flex; align-items: center;">
+            <span>➕</span>
+            <span>Create Event</span>
+        </a>
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- Pagination - Show when events exist -->
+    <div
+        style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 40px; padding: 30px;">
+        <a href="#"
+            style="padding: 10px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">←
+            Previous</a>
+
+        <a href="#"
+            style="padding: 10px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; min-width: 40px; text-align: center;">1</a>
+        <a href="#"
+            style="padding: 10px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0; min-width: 40px; text-align: center;">2</a>
+        <a href="#"
+            style="padding: 10px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0; min-width: 40px; text-align: center;">3</a>
+        <span style="padding: 10px; color: #a0aec0;">...</span>
+        <a href="#"
+            style="padding: 10px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0; min-width: 40px; text-align: center;">10</a>
+
+        <a href="#"
+            style="padding: 10px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">Next
+            →</a>
+    </div>
+
+
+</body>
+<script>
+    const avatar = document.getElementById('userAvatar');
+    const dropdown = document.getElementById('userDropdown');
+
+    avatar.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.style.display =
+            dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', function () {
+        dropdown.style.display = 'none';
+    });
+</script>
+
+</html>

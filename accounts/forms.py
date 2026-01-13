@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from accounts.models import CustomUser
+from django.contrib.auth.forms import PasswordChangeForm
 
 class RegistrationForm(UserCreationForm):
     password1 = forms.CharField(
@@ -40,7 +41,6 @@ class RegistrationForm(UserCreationForm):
         }
 
 
-
 class LoginForm(forms.Form):
     email = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
@@ -63,5 +63,41 @@ class ResetPasswordForm(forms.ModelForm):
             }),
             'password2': forms.PasswordInput(attrs={
                 'class': 'form-control'
+            })
+        }
+
+
+class ChangePasswordForm(PasswordChangeForm):
+    old_password = forms.PasswordInput()
+    new_password = forms.PasswordInput()
+    confirm_password = forms.PasswordInput()
+    widgets = {
+        'old_password': forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your password'
+        }),
+        'new_password': forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter a new password'
+        }),
+        'confirm_password': forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter the same password again'
+        })
+    }
+
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['profile_photo', 'name', 'phone']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your sweet name'
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your phone number'
             })
         }

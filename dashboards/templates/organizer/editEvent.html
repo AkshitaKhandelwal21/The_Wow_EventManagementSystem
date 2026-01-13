@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Event - EventHub</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 20px; box-sizing: border-box;">
+
+    <!-- Header -->
+    <div
+        style="max-width: 900px; margin: 0 auto 30px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 24px;">✏️</span>
+            </div>
+            <h1 style="margin: 0; color: white; font-size: 28px; font-weight: 700;">Edit Event</h1>
+        </div>
+        <a href="#"
+            style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 10px; color: white; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s;"
+            onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'"
+            onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
+            ← Cancel
+        </a>
+    </div>
+
+    <!-- Main Container -->
+    <div
+        style="max-width: 900px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); overflow: hidden;">
+        <!-- Status Banner -->
+        <div
+            style="background: #fef3c7; padding: 15px 40px; border-bottom: 2px solid #fbbf24; display: flex; align-items: center; gap: 12px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                </path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <p style="margin: 0; color: #92400e; font-size: 14px; font-weight: 600;">You are editing an existing event.
+                Changes will be reflected immediately after saving.</p>
+        </div>
+
+        <!-- Form Content -->
+        <form method="POST" enctype="multipart/form-data" style="padding: 40px;">
+            {% csrf_token %}
+
+            <!-- Current Event Image Display -->
+            <div style="margin-bottom: 30px;">
+                <!-- Upload New Image -->
+                <label
+                    style="display: block; margin-bottom: 10px; color: #2d3748; font-size: 16px; font-weight: 600;">Need
+                    New Cover Image? (Optional)</label>
+                <div id="imageUpload"
+                    style="border: 3px dashed #cbd5e0; border-radius: 12px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s; background: #f7fafc;"
+                    onmouseover="this.style.borderColor='#667eea'; this.style.background='#edf2f7'"
+                    onmouseout="this.style.borderColor='#cbd5e0'; this.style.background='#f7fafc'">
+                    <div style="font-size: 36px; margin-bottom: 10px;">📸</div>
+                    <p style="margin: 0 0 5px; color: #4a5568; font-size: 14px; font-weight: 600;">Click to upload new
+                        image</p>
+                    <p style="margin: 0; color: #a0aec0; font-size: 12px;">PNG, JPG or JPEG (max. 5MB)</p>
+                    <input type="file" id="fileInput" name="image" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <!-- Category and Type -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                <div style="margin-bottom: 25px;">
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 15px; font-weight: 600;">Event
+                        Title *</label>
+                    {{form.title}}
+                </div>
+                <div>
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 15px; font-weight: 600;">Category
+                        *</label>
+                    {{form.category}}
+                </div>
+            </div>
+
+            <!-- Date and Time -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                <div>
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 15px; font-weight: 600;">
+                        Date *</label>
+                    {{form.date}}
+                </div>
+                <div>
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 15px; font-weight: 600;">
+                        Time *</label>
+                    {{form.time}}
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div style="margin-bottom: 25px;">
+                <label
+                    style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 15px; font-weight: 600;">Venue
+                    / Location *</label>
+                {{form.venue}}
+            </div>
+
+            <!-- Address -->
+            <!-- <div style="margin-bottom: 25px;">
+                <label
+                    style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 15px; font-weight: 600;">Full
+                    Address</label>
+                <input type="text" name="address" value="{{ event.address }}"
+                    style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s; box-sizing: border-box; outline: none; margin-bottom: 12px;"
+                    onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'" placeholder="Street address">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                    <input type="text" name="city" value="{{ event.city }}"
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s; box-sizing: border-box; outline: none;"
+                        onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'" placeholder="City">
+                    <input type="text" name="state" value="{{ event.state }}"
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s; box-sizing: border-box; outline: none;"
+                        onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'" placeholder="State">
+                    <input type="text" name="zip" value="{{ event.zip }}"
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s; box-sizing: border-box; outline: none;"
+                        onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'" placeholder="ZIP Code">
+                </div>
+            </div> -->
+
+            <!-- Description -->
+            <div style="margin-bottom: 25px;">
+                <label
+                    style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 15px; font-weight: 600;">Event
+                    Description *</label>
+                {{form.description}}
+            </div>
+
+            <!-- Capacity and Price -->
+            <!-- <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                <div>
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 15px; font-weight: 600;">Maximum
+                        Capacity</label>
+                    <input type="number" name="capacity" min="1" value="{{ event.capacity }}"
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s; box-sizing: border-box; outline: none;"
+                        onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'" placeholder="e.g., 500">
+                </div>
+                <div>
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 15px; font-weight: 600;">Ticket
+                        Price ($)</label>
+                    <input type="number" name="price" min="0" step="0.01" value="{{ event.price }}"
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s; box-sizing: border-box; outline: none;"
+                        onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'"
+                        placeholder="0.00 (Free event)">
+                </div>
+            </div> -->
+
+            <!-- Action Buttons -->
+            <div
+                style="display: flex; gap: 15px; justify-content: flex-end; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                <a href=""
+                    style="padding: 14px 30px; background: white; color: #4a5568; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.3s;"
+                    onmouseover="this.style.borderColor='#cbd5e0'" onmouseout="this.style.borderColor='#e2e8f0'">
+                    Cancel Changes
+                </a>
+                <button type="submit"
+                    style="padding: 14px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)'">
+                    💾 Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Confirmation Modal Placeholder -->
+    <!-- Add your modal/confirmation dialog here when user saves -->
+
+</body>
+
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Events</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f7fafc; min-height: 100vh;">
+
+    <!-- Top Navigation Bar -->
+    <nav style="background: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 100;">
+        <div
+            style="max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; height: 70px;">
+
+            <!-- Logo -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 24px;">🎉</span>
+                </div>
+                <h2 style="margin: 0; color: #2d3748; font-size: 22px; font-weight: 700;">The-Wow</h2>
+            </div>
+
+            <!-- Right Menu -->
+            <div style="display: flex; align-items: center; gap: 25px;">
+                <a href="#" style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 15px;">Browse
+                    Events</a>
+                <a href="{% url 'user-dashboard' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
+                    Dashboard</a>
+                <a href="{% url 'reg-events' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
+                    Tickets</a>
+                <div style="position: relative; display: inline-block;">
+                    <!-- Avatar -->
+                    <div id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-weight: 700; cursor: pointer;">
+                        {{ request.user.name|slice:":1"|upper }}
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div id="userDropdown" style="display: none; position: absolute; right: 0; margin-top: 10px;
+        background: white; border-radius: 12px; width: 180px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden; z-index: 1000;">
+
+                        <a href="" style="display: block; padding: 12px 16px; color: #2d3748;
+            text-decoration: none; font-size: 14px;">
+                            👤 Profile
+                        </a>
+                        <a href="{% url 'logout' %}" style="display: block; padding: 12px 16px; color: #2d3748;
+            text-decoration: none; font-size: 14px;">
+                            🚪 Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+    </nav>
+
+    <!-- Hero Search Section -->
+    <div
+        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 60px 40px; position: relative; overflow: hidden;">
+        <div
+            style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;">
+        </div>
+        <div
+            style="position: absolute; bottom: -80px; left: -80px; width: 250px; height: 250px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;">
+        </div>
+
+        <div style="max-width: 1400px; margin: 0 auto; position: relative; z-index: 1;">
+            <h1 style="margin: 0 0 15px; color: white; font-size: 42px; font-weight: 700; text-align: center;">Discover
+                Amazing Events</h1>
+            <p style="margin: 0 0 35px; color: rgba(255, 255, 255, 0.9); font-size: 18px; text-align: center;">Find and
+                attend events that match your interests</p>
+
+            <!-- Search Bar -->
+            <div style="max-width: 800px; margin: 0 auto; display: flex; gap: 12px;">
+                <div style="flex: 1; position: relative;">
+                    <input type="text" name="search" placeholder="Search events by name, location, or keyword..."
+                        style="width: 100%; padding: 16px 20px 16px 50px; border: none; border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                    <span
+                        style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 20px;">🔍</span>
+                </div>
+                <button type="submit"
+                    style="padding: 16px 32px; background: white; color: #667eea; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); transition: all 0.3s;">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div style="max-width: 1400px; margin: 0 auto; padding: 40px;">
+
+        <!-- Filters Section -->
+        <div
+            style="background: white; border-radius: 16px; padding: 25px 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 30px;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #2d3748; font-size: 24px; font-weight: 700;">All Events</h2>
+                <span style="color: #718096; font-size: 14px; font-weight: 500;">Showing {{ events_count }}
+                    events</span>
+            </div>
+
+            <!-- Filter Options -->
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+
+                <!-- Category Filter -->
+                <select name="category"
+                    style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
+                    <option value="">All Categories</option>
+                    <option value="music">🎵 Music & Concerts</option>
+                    <option value="sports">⚽ Sports & Fitness</option>
+                    <option value="tech">💻 Technology</option>
+                    <option value="arts">🎨 Arts & Culture</option>
+                    <option value="food">🍔 Food & Dining</option>
+                    <option value="business">💼 Business</option>
+                    <option value="education">📚 Education</option>
+                    <option value="entertainment">🎭 Entertainment</option>
+                </select>
+
+                <!-- Date Filter -->
+                <select name="date"
+                    style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
+                    <option value="">Any Date</option>
+                    <option value="today">Today</option>
+                    <option value="tomorrow">Tomorrow</option>
+                    <option value="this-week">This Week</option>
+                    <option value="this-month">This Month</option>
+                    <option value="custom">Custom Date Range</option>
+                </select>
+
+                <!-- Event Type Filter -->
+                <select name="type"
+                    style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
+                    <option value="">All Types</option>
+                    <option value="in-person">📍 In-Person</option>
+                    <option value="online">🌐 Online</option>
+                    <option value="hybrid">🔄 Hybrid</option>
+                </select>
+
+                <!-- Price Filter -->
+                <select name="price"
+                    style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
+                    <option value="">Any Price</option>
+                    <option value="free">Free</option>
+                    <option value="paid">Paid</option>
+                    <option value="0-50">$0 - $50</option>
+                    <option value="50-100">$50 - $100</option>
+                    <option value="100+">$100+</option>
+                </select>
+
+                <!-- Sort By -->
+                <select name="sort"
+                    style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
+                    <option value="date">Sort by: Date</option>
+                    <option value="popular">Sort by: Popularity</option>
+                    <option value="price-low">Sort by: Price (Low to High)</option>
+                    <option value="price-high">Sort by: Price (High to Low)</option>
+                    <option value="newest">Sort by: Newest First</option>
+                </select>
+
+                <!-- Clear Filters Button -->
+                <a href="#"
+                    style="padding: 10px 16px; background: #f7fafc; color: #4a5568; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0; margin-left: auto;">Clear
+                    Filters</a>
+            </div>
+        </div>
+
+        <!-- Events Grid -->
+        <div id="eventsGrid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-bottom: 40px;">
+
+            <!-- Event Card Template (for reference) -->
+            {% for event in events %}
+
+            <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; transition: all 0.3s; cursor: pointer;"
+                onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.1)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 10px rgba(0, 0, 0, 0.05)'">
+
+                <div
+                    style="position: relative; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden;">
+                    <img src="{{ event.image }}" alt="{{ event.title }}"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+
+                <!-- Event Details -->
+                <div style="padding: 20px;">
+                    <!-- Category Badge -->
+                    <span
+                        style="display: inline-block; background: #edf2f7; color: #667eea; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 10px;">
+                        {{ event.category }}</span>
+
+                    <!-- Title -->
+                    <h3
+                        style="margin: 0 0 12px; color: #2d3748; font-size: 18px; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        {{ event.title }}</h3>
+
+                    <!-- Date & Time -->
+                    <div
+                        style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: #718096; font-size: 14px;">
+                        <span style="font-size: 16px;">📅</span>
+                        <span>{{ event.date }} at {{ event.time }}</span>
+                    </div>
+
+                    <!-- Location -->
+                    <div
+                        style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px; color: #718096; font-size: 14px;">
+                        <span style="font-size: 16px;">📍</span>
+                        <span
+                            style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ event.venue }}</span>
+                    </div>
+                    <!-- Stats -->
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 2px solid #e2e8f0;">
+                        <div style="display: flex; align-items: center; gap: 6px; color: #718096; font-size: 13px;">
+                            <span>👥</span>
+                            <span>{{ event.attendees_count }} going</span>
+                        </div>
+                        <a href="{% url 'view_event' event.pk %}"
+                            style="padding: 8px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 600;">View
+                            Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Empty State - Show when no events match filters -->
+            <!-- <div
+                style="grid-column: 1 / -1; text-align: center; padding: 80px 20px; background: white; border-radius: 16px; border: 2px dashed #cbd5e0;">
+                <div style="font-size: 80px; margin-bottom: 20px;">🔍</div>
+                <h3 style="margin: 0 0 12px; color: #2d3748; font-size: 24px; font-weight: 700;">No Events Found</h3>
+                <p style="margin: 0 0 25px; color: #718096; font-size: 16px;">Try adjusting your filters or search
+                    criteria</p>
+                <a href="#"
+                    style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 15px;">
+                    Clear All Filters
+                </a>
+            </div> -->
+
+        </div>
+
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: center; align-items: center; gap: 10px; padding: 30px;">
+
+            <!-- Previous Button -->
+            {% if events.has_previous %}
+            <a href="?page={{ events.previous_page_number }}"
+                style="padding: 10px 20px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0; transition: all 0.3s;">←
+                Previous</a>
+            {% else %}
+            <span
+                style="padding: 10px 20px; background: #f7fafc; color: #cbd5e0; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">←
+                Previous</span>
+            {% endif %}
+
+            <!-- Page Numbers -->
+            {% for num in events.paginator.page_range %}
+            {% if events.number == num %}
+            <span
+                style="padding: 10px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; font-size: 14px; font-weight: 600; min-width: 40px; text-align: center;">{{
+                num }}</span>
+            {% elif num > events.number|add:'-3' and num < events.number|add:'3' %} <a href="?page={{ num }}"
+                style="padding: 10px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0; min-width: 40px; text-align: center; transition: all 0.3s;">
+                {{ num }}</a>
+                {% endif %}
+                {% endfor %}
+
+                <!-- Next Button -->
+                {% if events.has_next %}
+                <a href="?page={{ events.next_page_number }}"
+                    style="padding: 10px 20px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0; transition: all 0.3s;">Next
+                    →</a>
+                {% else %}
+                <span
+                    style="padding: 10px 20px; background: #f7fafc; color: #cbd5e0; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">Next
+                    →</span>
+                {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: #2d3748; color: white; padding: 50px 0; margin-top: 60px;">
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 40px; text-align: center;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px;">
+                <div
+                    style="background: rgba(255, 255, 255, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 28px;">🎉</span>
+                </div>
+                <h3 style="margin: 0; font-size: 24px; font-weight: 700;">EventHub</h3>
+            </div>
+            <p style="margin: 0 0 20px; color: rgba(255, 255, 255, 0.7); font-size: 14px;">Creating memorable
+                experiences, one event at a time</p>
+            <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 25px;">
+                <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">About</a>
+                <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">Contact</a>
+                <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">Privacy</a>
+                <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">Terms</a>
+            </div>
+            <p style="margin: 0; color: rgba(255, 255, 255, 0.5); font-size: 13px;">© 2026 EventHub. All rights
+                reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+<script>
+    const avatar = document.getElementById('userAvatar');
+    const dropdown = document.getElementById('userDropdown');
+
+    avatar.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.style.display =
+            dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', function () {
+        dropdown.style.display = 'none';
+    });
+</script>
+
+
+</html>

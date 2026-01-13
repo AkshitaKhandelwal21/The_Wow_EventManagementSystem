@@ -11,4 +11,7 @@ urlpatterns = [
     path('verify/<str:token>/', views.SendEmailVerificationView.as_view(), name='email-verification'),
     path('forgot-password/', views.ForgotPasswordView.as_view(), name='forgot-password'),
     path('reset_password/<str:token>/', views.ResetPasswordView.as_view(), name='reset_password'),
+    path('change_password/', views.ChangePasswordView.as_view(), name='change-pass'),
+    path('profile/', views.ProfilePageView.as_view(), name='profile'),
+    path('edit_profile/<int:id>/', views.EditProfileView.as_view(), name='edit-profile'),
 ]
