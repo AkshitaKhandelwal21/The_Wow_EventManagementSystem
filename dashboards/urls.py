@@ -12,4 +12,5 @@ urlpatterns = [
     path('delete_event/<int:pk>/', views.DeleteEventView.as_view(), name='delete_event'),
     path('all_events/', views.AllEventsView.as_view(), name='all_events'),
     path('<int:pk>/register/', views.UserRegisterView.as_view(), name='user-register'),
+    path('reg_events/', views.MyRegisteredEventsView.as_view(), name='reg-events'),
 ]   

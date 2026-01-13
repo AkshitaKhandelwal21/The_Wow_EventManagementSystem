@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import TemplateView, FormView
 from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
-from accounts.forms import ForgotPasswordForm, LoginForm, RegistrationForm, ResetPasswordForm
+from accounts.forms import EditProfileForm, ForgotPasswordForm, LoginForm, RegistrationForm, ResetPasswordForm
 from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -186,6 +186,36 @@ class ResetPasswordView(TemplateView):
 
             return redirect('login')
         return self.render_to_response({'form': form})
+    
+
+class ChangePasswordView(TemplateView):
+    pass
 
     
+class ProfilePageView(TemplateView):
+    template_name = 'profile_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = CustomUser.objects.filter(id=self.request.user.id)
+        return context
     
+
+class EditProfileView(TemplateView):
+    template_name = 'edit_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs) 
+        user = get_object_or_404(CustomUser, id=self.kwargs['id'])
+        context['form'] = EditProfileForm(instance=user)
+        context['user'] = user
+        return context
+
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(CustomUser, id=self.kwargs['id'])
+        form = EditProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        
+        return self.render_to_response({'form': form, 'user': user})    

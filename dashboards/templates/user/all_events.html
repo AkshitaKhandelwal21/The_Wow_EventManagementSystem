@@ -28,9 +28,11 @@
             <div style="display: flex; align-items: center; gap: 25px;">
                 <a href="#" style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 15px;">Browse
                     Events</a>
-                <a href="#" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
+                <a href="{% url 'user-dashboard' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
                     Dashboard</a>
-                <a href="#" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
+                <a href="{% url 'reg-events' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
                     Tickets</a>
                 <div style="position: relative; display: inline-block;">
                     <!-- Avatar -->

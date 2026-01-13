@@ -40,7 +40,6 @@ class RegistrationForm(UserCreationForm):
         }
 
 
-
 class LoginForm(forms.Form):
     email = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
@@ -63,5 +62,20 @@ class ResetPasswordForm(forms.ModelForm):
             }),
             'password2': forms.PasswordInput(attrs={
                 'class': 'form-control'
+            })
+        }
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['profile_photo', 'name', 'phone']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your sweet name'
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your phone number'
             })
         }
