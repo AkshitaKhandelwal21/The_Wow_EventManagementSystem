@@ -243,3 +243,23 @@ class DeleteProfileView(LoginRequiredMixin, View):
         user = get_object_or_404(CustomUser, id=self,kwargs=['id'])
         user.delete()
         return redirect('login')
+    
+
+class AllUsersView(TemplateView):
+    template_name = 'all_users.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        users = CustomUser.objects.filter(role='user').all()
+        context['users'] = users
+        return context
+    
+
+class AllOrganizersView(TemplateView):
+    template_name = "all_organizers.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        orgs = CustomUser.objects.filter(role='organizer').all()
+        context['users'] = orgs
+        return context

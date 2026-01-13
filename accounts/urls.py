@@ -15,4 +15,6 @@ urlpatterns = [
     path('profile/', views.ProfilePageView.as_view(), name='profile'),
     path('edit_profile/<int:id>/', views.EditProfileView.as_view(), name='edit-profile'),
     path('delete_user/<int:id>', views.DeleteProfileView.as_view(), name='delete-user'),
+    path('all_users/', views.AllUsersView.as_view(), name='all_users'),
+    path('all_orgs/', views.AllOrganizersView.as_view(), name='all_orgs'),
 ]
