@@ -26,11 +26,14 @@
 
             <!-- Right Menu -->
             <div style="display: flex; align-items: center; gap: 25px;">
-                <a href="{% url 'all_events' %}" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Browse
+                <a href="{% url 'all_events' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Browse
                     Events</a>
-                <a href="{% url 'user-dashboard' %}" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
+                <a href="{% url 'user-dashboard' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
                     Dashboard</a>
-                <a href="{% url 'reg-events' %}" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
+                <a href="{% url 'reg-events' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
                     Tickets</a>
                 <div
                     style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer;">
@@ -47,8 +50,9 @@
             style="background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 30px;">
 
             <!-- Cover Image -->
-            <div style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative;">
-                
+            <div
+                style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative;">
+
             </div>
 
             <!-- Profile Info -->
@@ -88,7 +92,10 @@
                     </div>
                     <form action="{% url 'edit-profile' user.id %}" method="POST">
                         {% csrf_token %}
-                        <button style="padding: 14px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)'">
+                        <button
+                            style="padding: 14px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);"
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)'"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)'">
                             Edit Profile</button>
                     </form>
                 </div>
@@ -197,11 +204,16 @@
                     </h2>
 
                     <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <a href="#"
-                            style="display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: #f7fafc; border-radius: 10px; text-decoration: none; border: 2px solid #e2e8f0;">
+                        <form action="{% url 'change-pass' %}" method="POST">
+                            {% csrf_token %}
+                            <button>
                             <span style="color: #2d3748; font-weight: 600; font-size: 14px;">🔒 Change Password</span>
                             <span style="color: #a0aec0;">→</span>
-                        </a>
+                        </button>
+                        </form>
+                        <!-- <a href="#"
+                            style="display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: #f7fafc; border-radius: 10px; text-decoration: none; border: 2px solid #e2e8f0;">
+                        </a> -->
                         <a href="#"
                             style="display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: #f7fafc; border-radius: 10px; text-decoration: none; border: 2px solid #e2e8f0;">
                             <span style="color: #2d3748; font-weight: 600; font-size: 14px;">🔔 Notifications</span>
@@ -346,7 +358,7 @@
                     style="background: rgba(255, 255, 255, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                     <span style="font-size: 28px;">🎉</span>
                 </div>
-                <h3 style="margin: 0; font-size: 24px; font-weight: 700;">EventHub</h3>
+                <h3 style="margin: 0; font-size: 24px; font-weight: 700;">The-Wow</h3>
             </div>
             <p style="margin: 0 0 20px; color: rgba(255, 255, 255, 0.7); font-size: 14px;">Creating memorable
                 experiences, one event at a time</p>
