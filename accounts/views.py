@@ -1,9 +1,10 @@
 from django.utils import timezone
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, View
 from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
+from django.urls import reverse_lazy
 from accounts.forms import ChangePasswordForm, EditProfileForm, ForgotPasswordForm, LoginForm, RegistrationForm, ResetPasswordForm
 from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -232,3 +233,13 @@ class EditProfileView(TemplateView):
             return redirect('profile')
         
         return self.render_to_response({'form': form, 'user': user})    
+    
+
+class DeleteProfileView(LoginRequiredMixin, View):
+    model = CustomUser
+    # success_url = reverse_lazy('login')
+
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(CustomUser, id=self,kwargs=['id'])
+        user.delete()
+        return redirect('login')

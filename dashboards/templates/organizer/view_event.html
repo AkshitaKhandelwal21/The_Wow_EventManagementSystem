@@ -45,7 +45,7 @@
         background: white; border-radius: 12px; width: 180px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden; z-index: 1000;">
 
-                        <a href="" style="display: block; padding: 12px 16px; color: #2d3748;
+                        <a href="{% url 'profile' %}" style="display: block; padding: 12px 16px; color: #2d3748;
             text-decoration: none; font-size: 14px;">
                             👤 Profile
                         </a>
@@ -99,7 +99,7 @@
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px; color: white;">
                     <span style="font-size: 24px;">👥</span>
-                    <span style="font-size: 16px; font-weight: 500;">ATTENDEE_COUNT attendees</span>
+                    <span style="font-size: 16px; font-weight: 500;">{{attendees}} attendees</span>
                 </div>
             </div>
             <br>
@@ -139,7 +139,7 @@
                                     Date & Time</p>
                                 <p style="margin: 0; color: #2d3748; font-size: 16px; font-weight: 600;">
                                     {{event.date}}</p>
-                                <p style="margin: 5px 0 0; color: #4a5568; font-size: 14px;">{{event.time}} - END_TIME
+                                <p style="margin: 5px 0 0; color: #4a5568; font-size: 14px;">{{event.time}}
                                 </p>
                             </div>
                         </div>
@@ -155,9 +155,11 @@
                                     Venue</p>
                                 <p style="margin: 0; color: #2d3748; font-size: 16px; font-weight: 600;">{{event.venue}}
                                 </p>
+                                {% if event.address %}
                                 <p style="margin: 5px 0 0; color: #4a5568; font-size: 14px;">FULL_ADDRESS</p>
-                                <a href="#"
-                                    style="display: inline-block; margin-top: 8px; color: #667eea; font-size: 14px; font-weight: 600; text-decoration: none;">View
+                                {% endif %}
+                                <a href="https://www.google.com/maps/dir/?api=1&destination={{ event.address|urlencode }}" target="_blank"
+                                    style="text-decoration: none; display: inline-block; margin-top: 8px; color: #667eea; font-size: 14px; font-weight: 600; text-decoration: none;">View
                                     on Map →</a>
                             </div>
                         </div>
@@ -179,11 +181,10 @@
                                     Organizer →</a>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
-                {% if event.user.role == "organizer" %}
+                {% if request.user == event.user and request.user.role == "organizer" %}
                 <!-- Organizer Action Buttons (Show only for event organizer) -->
                 <div
                     style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 2px solid #fef3c7;">
@@ -201,7 +202,6 @@
                                 style="flex: 1; min-width: 150px; padding: 14px 24px; background: #fee2e2; color: #dc2626; text-align: center; text-decoration: none; border-radius: 10px; font-size: 15px; font-weight: 600; border: 2px solid #fecaca;">🗑️
                                 Delete Event</a>
                         </form>
-
                     </div>
                 </div>
                 {% endif %}
@@ -209,6 +209,7 @@
             </div>
 
             <!-- Right Column - Ticket/Registration Card -->
+             {% if not is_reg %}
             <div>
 
                 <!-- Sticky Registration Card -->
@@ -276,6 +277,7 @@
 
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 

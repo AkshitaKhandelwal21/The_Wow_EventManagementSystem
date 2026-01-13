@@ -11,10 +11,17 @@ from .models import Event, EventRegistration
 class OrganizerDashboardView(TemplateView):
     template_name = 'organizer/organizer_dashboard.html'
 
-
+    
 class UserDashboardView(TemplateView):
     template_name = "user/user_dashboard.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        registrations = EventRegistration.objects.filter(user=self.request.user).select_related(
+            'event').order_by('created_at')[:3]
+        context['activities'] = registrations
+        return context
+    
 
 class AdmindashboardView(TemplateView):
     template_name = "admin/admin_dashboard.html"
@@ -53,9 +60,15 @@ class ViewEvent(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event_id = self.kwargs['pk']
-        context['event'] = get_object_or_404(
+        event = get_object_or_404(
             Event.objects.select_related('user'), id=event_id
         )
+        context['event'] = event
+        is_reg = EventRegistration.objects.filter(
+            user=self.request.user, event=event).exists()
+        attendees = EventRegistration.objects.filter(event=event).count()
+        context['attendees'] = attendees
+        context['is_reg'] = is_reg
         return context
     
 
