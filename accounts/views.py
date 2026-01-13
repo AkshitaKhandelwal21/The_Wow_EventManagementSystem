@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import TemplateView, FormView
 from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
-from accounts.forms import EditProfileForm, ForgotPasswordForm, LoginForm, RegistrationForm, ResetPasswordForm
+from accounts.forms import ChangePasswordForm, EditProfileForm, ForgotPasswordForm, LoginForm, RegistrationForm, ResetPasswordForm
 from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -189,9 +189,22 @@ class ResetPasswordView(TemplateView):
     
 
 class ChangePasswordView(TemplateView):
-    pass
+    template_name = 'change_password.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ChangePasswordForm(self.request.user)
+        return context
     
+    def post(self, request, *args, **kwargs):
+        form = ChangePasswordForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+        
+        return self.render_to_response({'form': form})
+
+
 class ProfilePageView(TemplateView):
     template_name = 'profile_page.html'
 
