@@ -213,7 +213,7 @@ class ProfilePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile'] = CustomUser.objects.filter(id=self.request.user.id)
+        context['user'] = self.request.user
         return context
     
 
@@ -222,19 +222,19 @@ class EditProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs) 
-        user = get_object_or_404(CustomUser, id=self.kwargs['id'])
-        context['form'] = EditProfileForm(instance=user)
-        context['user'] = user
+        # user = get_object_or_404(CustomUser, id=self.kwargs['id'])
+        context['form'] = EditProfileForm(instance=self.request.user)
+        # context['user'] = user
         return context
 
     def post(self, request, *args, **kwargs):
-        user = get_object_or_404(CustomUser, id=self.kwargs['id'])
-        form = EditProfileForm(request.POST, request.FILES, instance=user)
+        # user = get_object_or_404(CustomUser, id=self.kwargs['id'])
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect('profile')
         
-        return self.render_to_response({'form': form, 'user': user})    
+        return self.render_to_response({'form': form})    
     
 
 class DeleteProfileView(LoginRequiredMixin, View):
