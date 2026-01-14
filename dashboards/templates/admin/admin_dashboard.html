@@ -3,9 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Dashboard</title>
 </head>
-<body>
-    ADMIN DASHBOARD
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f7fafc; min-height: 100vh;">
+    
+    <!-- Sidebar -->
+    <div style="position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); z-index: 100; overflow-y: auto;">
+        
+        <!-- Logo -->
+        <div style="padding: 30px 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 24px;">🎉</span>
+                </div>
+                <div>
+                    <h2 style="margin: 0; color: white; font-size: 20px; font-weight: 700;">The-Wow</h2>
+                    <p style="margin: 0; color: rgba(255, 255, 255, 0.6); font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Admin Panel</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav style="padding: 20px 0;">
+            <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: white; text-decoration: none; background: rgba(102, 126, 234, 0.2); border-left: 4px solid #667eea; transition: all 0.3s;">
+                <span style="font-size: 20px;">📊</span>
+                <span style="font-weight: 600; font-size: 15px;">Dashboard</span>
+            </a>
+            <a href="{% url 'all_events' %}" style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.7); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+                <span style="font-size: 20px;">🎫</span>
+                <span style="font-weight: 600; font-size: 15px;">Events</span>
+            </a>
+            <a href="{% url 'all_users' %}" style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.7); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+                <span style="font-size: 20px;">👥</span>
+                <span style="font-weight: 600; font-size: 15px;">Users</span>
+            </a>
+            <a href="{% url 'all_orgs' %}" style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.7); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+                <span style="font-size: 20px;">👨‍💼</span>
+                <span style="font-weight: 600; font-size: 15px;">Organizers</span>
+            </a>
+            <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.7); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+                <span style="font-size: 20px;">💰</span>
+                <span style="font-weight: 600; font-size: 15px;">Revenue</span>
+            </a>
+            <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.7); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+                <span style="font-size: 20px;">📈</span>
+                <span style="font-weight: 600; font-size: 15px;">Analytics</span>
+            </a>
+            <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.7); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+                <span style="font-size: 20px;">📝</span>
+                <span style="font-weight: 600; font-size: 15px;">Reports</span>
+            </a>
+            <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.7); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+                <span style="font-size: 20px;">⚙️</span>
+                <span style="font-weight: 600; font-size: 15px;">Settings</span>
+            </a>
+        </nav>
+
+        <!-- Admin Profile -->
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 25px; border-top: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.2);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 16px;">A</div>
+                <div style="flex: 1; min-width: 0;">
+                    <p style="margin: 0; color: white; font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Admin User</p>
+                    <p style="margin: 0; color: rgba(255, 255, 255, 0.5); font-size: 12px;">Administrator</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div style="margin-left: 260px; padding: 30px 40px;">
+        
+        <!-- Top Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px;">
+            <div>
+                <h1 style="margin: 0 0 8px; color: #1e293b; font-size: 32px; font-weight: 700;">Admin Dashboard</h1>
+                <p style="margin: 0; color: #64748b; font-size: 15px;">Welcome back! Here's what's happening with The-Wow today.</p>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <button style="padding: 12px 20px; background: white; color: #475569; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 18px;">📅</span>
+                    <span>Last 30 Days</span>
+                </button>
+                <button style="padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                    <span style="font-size: 18px;">📥</span>
+                    <span>Export Report</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 35px;">
+            
+            <!-- Total Events Card -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); opacity: 0.1; border-radius: 50%;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; position: relative;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">📅</div>
+                    <span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">+12%</span>
+                </div>
+                <h3 style="margin: 0 0 5px; color: #1e293b; font-size: 32px; font-weight: 700;">{{ total_events }}</h3>
+                <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">Total Events</p>
+            </div>
+            
+            <!-- Total Users Card -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); opacity: 0.1; border-radius: 50%;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; position: relative;">
+                    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">👥</div>
+                    <span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">+24%</span>
+                </div>
+                <h3 style="margin: 0 0 5px; color: #1e293b; font-size: 32px; font-weight: 700;">{{ total_users }}</h3>
+                <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">Total Users</p>
+            </div>
+
+            <!-- Total Revenue Card -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); opacity: 0.1; border-radius: 50%;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; position: relative;">
+                    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">💵</div>
+                    <span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">+18%</span>
+                </div>
+                <h3 style="margin: 0 0 5px; color: #1e293b; font-size: 32px; font-weight: 700;">${{ total_revenue }}</h3>
+                <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">Total Revenue</p>
+            </div>
+
+            <!-- Active Organizers Card -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); opacity: 0.1; border-radius: 50%;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; position: relative;">
+                    <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">👨‍💼</div>
+                    <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">+8%</span>
+                </div>
+                <h3 style="margin: 0 0 5px; color: #1e293b; font-size: 32px; font-weight: 700;">{{ active_organizers }}</h3>
+                <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">Active Organizers</p>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-bottom: 35px;">
+            
+            <!-- Recent Events Table -->
+            <div style="background: white; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; overflow: hidden;">
+                <div style="padding: 25px 30px; border-bottom: 2px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin: 0; color: #1e293b; font-size: 20px; font-weight: 700;">Recent Events</h2>
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">View All →</a>
+                </div>
+
+                <!-- Table Content -->
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8fafc;">
+                                <th style="padding: 16px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Event</th>
+                                <th style="padding: 16px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Organizer</th>
+                                <th style="padding: 16px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Date</th>
+                                <th style="padding: 16px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Status</th>
+                                <th style="padding: 16px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Django loop: {% for event in recent_events %} -->
+                            <!--
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+                                <td style="padding: 20px 30px;">
+                                    <p style="margin: 0; color: #1e293b; font-weight: 600; font-size: 14px;">{{ event.title }}</p>
+                                </td>
+                                <td style="padding: 20px 30px;">
+                                    <p style="margin: 0; color: #475569; font-size: 14px;">{{ event.organizer_name }}</p>
+                                </td>
+                                <td style="padding: 20px 30px;">
+                                    <p style="margin: 0; color: #475569; font-size: 14px;">{{ event.date|date:"M d, Y" }}</p>
+                                </td>
+                                <td style="padding: 20px 30px;">
+                                    {% if event.status == 'published' %}
+                                    <span style="background: #d1fae5; color: #065f46; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Published</span>
+                                    {% elif event.status == 'draft' %}
+                                    <span style="background: #fef3c7; color: #92400e; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Draft</span>
+                                    {% else %}
+                                    <span style="background: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Cancelled</span>
+                                    {% endif %}
+                                </td>
+                                <td style="padding: 20px 30px;">
+                                    <div style="display: flex; gap: 8px;">
+                                        <a href="#" style="padding: 6px 12px; background: #f1f5f9; color: #475569; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 600;">View</a>
+                                        <a href="#" style="padding: 6px 12px; background: #fee2e2; color: #dc2626; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 600;">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            -->
+                            <!-- {% endfor %} -->
+
+                            <!-- Empty State -->
+                            <tr>
+                                <td colspan="5" style="padding: 60px 30px; text-align: center;">
+                                    <div style="font-size: 48px; margin-bottom: 10px;">📅</div>
+                                    <p style="margin: 0; color: #64748b; font-size: 14px;">No recent events</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div style="display: flex; flex-direction: column; gap: 25px;">
+                
+                <!-- Quick Actions Card -->
+                <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                    <h3 style="margin: 0 0 20px; color: #1e293b; font-size: 18px; font-weight: 700;">Quick Actions</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <a href="{% url 'new_event' %}" style="display: flex; align-items: center; gap: 12px; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; text-decoration: none; transition: all 0.3s; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
+                            <span style="font-size: 20px;">➕</span>
+                            <span style="color: white; font-weight: 600; font-size: 14px;">Create Event</span>
+                        </a>
+                        <a href="" style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f8fafc; border-radius: 10px; text-decoration: none; border: 2px solid #e2e8f0;">
+                            <span style="font-size: 20px;">👤</span>
+                            <span style="color: #1e293b; font-weight: 600; font-size: 14px;">Add User</span>
+                        </a>
+                        <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f8fafc; border-radius: 10px; text-decoration: none; border: 2px solid #e2e8f0;">
+                            <span style="font-size: 20px;">📊</span>
+                            <span style="color: #1e293b; font-weight: 600; font-size: 14px;">View Reports</span>
+                        </a>
+                        <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f8fafc; border-radius: 10px; text-decoration: none; border: 2px solid #e2e8f0;">
+                            <span style="font-size: 20px;">⚙️</span>
+                            <span style="color: #1e293b; font-weight: 600; font-size: 14px;">Settings</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Card -->
+                <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                    <h3 style="margin: 0 0 20px; color: #1e293b; font-size: 18px; font-weight: 700;">Recent Activity</h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <!-- Django loop: {% for activity in recent_activities %} -->
+                        <!--
+                        <div style="display: flex; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #f1f5f9;">
+                            <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">{{ activity.icon }}</div>
+                            <div style="flex: 1;">
+                                <p style="margin: 0 0 4px; color: #1e293b; font-size: 13px; font-weight: 600;">{{ activity.title }}</p>
+                                <p style="margin: 0; color: #64748b; font-size: 12px;">{{ activity.time }}</p>
+                            </div>
+                        </div>
+                        -->
+                        <!-- {% endfor %} -->
+
+                        <!-- Empty State -->
+                        <div style="text-align: center; padding: 30px 15px;">
+                            <p style="margin: 0; color: #64748b; font-size: 13px;">No recent activity</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;">
+            
+            <!-- Top Categories Card -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                <h3 style="margin: 0 0 20px; color: #1e293b; font-size: 18px; font-weight: 700;">Top Categories</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <!-- Django loop: {% for category in top_categories %} -->
+                    <!--
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                        <span style="color: #1e293b; font-size: 14px; font-weight: 600;">{{ category.name }}</span>
+                        <span style="color: #667eea; font-size: 14px; font-weight: 700;">{{ category.count }}</span>
+                    </div>
+                    -->
+                    <!-- {% endfor %} -->
+
+                    <!-- Empty State -->
+                    <div style="text-align: center; padding: 30px 15px;">
+                        <p style="margin: 0; color: #64748b; font-size: 13px;">No data available</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Approvals Card -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                <h3 style="margin: 0 0 20px; color: #1e293b; font-size: 18px; font-weight: 700;">Pending Approvals</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <!-- Django loop: {% for approval in pending_approvals %} -->
+                    <!--
+                    <div style="padding: 12px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                        <p style="margin: 0 0 4px; color: #92400e; font-size: 13px; font-weight: 600;">{{ approval.type }}</p>
+                        <p style="margin: 0; color: #b45309; font-size: 12px;">{{ approval.description }}</p>
+                    </div>
+                    -->
+                    <!-- {% endfor %} -->
+
+                    <!-- Empty State -->
+                    <div style="text-align: center; padding: 30px 15px;">
+                        <p style="margin: 0; color: #64748b; font-size: 13px;">No pending approvals</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status Card -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                <h3 style="margin: 0 0 20px; color: #1e293b; font-size: 18px; font-weight: 700;">System Status</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                        <span style="color: #1e293b; font-size: 14px; font-weight: 600;">Server Status</span>
+                        <span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">Online</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                        <span style="color: #1e293b; font-size: 14px; font-weight: 600;">Database</span>
+                        <span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">Healthy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

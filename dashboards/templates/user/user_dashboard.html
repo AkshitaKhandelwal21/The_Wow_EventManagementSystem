@@ -1,151 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Dashboard - EventHub</title>
-</head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f7fafc; min-height: 100vh;">
-    
-    <!-- Top Navigation Bar -->
-    <nav style="background: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 100;">
-        <div style="max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; height: 70px;">
-            
-            <!-- Logo -->
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                    <span style="font-size: 24px;">🎉</span>
-                </div>
-                <h2 style="margin: 0; color: #2d3748; font-size: 22px; font-weight: 700;">The-Wow</h2>
-            </div>
-            
-            <!-- Right Menu -->
-            <div style="display: flex; align-items: center; gap: 25px;">
-                <a href="{% url 'all_events' %}" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Browse Events</a>
-                <a href="#" style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 15px;">My Dashboard</a>
-                <a href="{% url 'reg-events' %}" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My Tickets</a>
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer;">{{ request.user.name.0 }}</div>
-            </div>
-        </div>
-    </nav>
+{% include "user_header.html" %}    
 
     <!-- Main Content -->
     <div style="max-width: 1400px; margin: 0 auto; padding: 40px;">
-        
+
         <!-- Welcome Section -->
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; padding: 40px 50px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3); position: relative; overflow: hidden;">
-            <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;"></div>
-            <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;"></div>
+        <div
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; padding: 40px 50px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;">
+            </div>
+            <div
+                style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;">
+            </div>
             <div style="position: relative; z-index: 1;">
-                <h1 style="margin: 0 0 10px; color: white; font-size: 36px; font-weight: 700;">Welcome back, {{ user.name }}! 👋</h1>
-                <p style="margin: 0; color: rgba(255, 255, 255, 0.9); font-size: 18px;">Discover and attend amazing events happening around you</p>
+                <h1 style="margin: 0 0 10px; color: white; font-size: 36px; font-weight: 700;">Welcome back, 
+                    {{ user.name }}! 👋</h1>
+                <p style="margin: 0; color: rgba(255, 255, 255, 0.9); font-size: 18px;">Discover and attend amazing
+                    events happening around you</p>
             </div>
         </div>
 
 
         <!-- Main Content Grid -->
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
-            
+
             <!-- Left Column -->
             <div>
-                
+
                 <!-- Upcoming Events Section -->
-                <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 30px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                        <h2 style="margin: 0; color: #2d3748; font-size: 24px; font-weight: 700;">My Upcoming Events</h2>
-                        <a href="#" style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">View All →</a>
+                <div
+                    style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 30px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                        <h2 style="margin: 0; color: #2d3748; font-size: 24px; font-weight: 700;">My Upcoming Events
+                        </h2>
+                        <a href="{% url 'all_events' %}"
+                            style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">View All
+                            →</a>
                     </div>
 
                     <!-- Event Cards Container - Will be populated by Django -->
                     <div id="upcomingEvents" style="display: flex; flex-direction: column; gap: 20px;">
-                        
-                        <!-- Django loop: {% for event in upcoming_events %} -->
+                        {% if activities %}
+                        {% for act in activities %}
                         <!-- Event Card Template (for reference) -->
-                        <!--
+                        
                         <div style="display: flex; gap: 20px; padding: 20px; background: #f7fafc; border-radius: 12px; border: 2px solid #e2e8f0; transition: all 0.3s;">
                             <div style="flex-shrink: 0; width: 120px; height: 120px; border-radius: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden;">
-                                <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="{{ act.event.image }}" alt="{{ act.event.title }}" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                             <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                                 <div>
-                                    <span style="display: inline-block; background: #edf2f7; color: #667eea; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-bottom: 8px;">{{ event.category }}</span>
-                                    <h3 style="margin: 0 0 8px; color: #2d3748; font-size: 18px; font-weight: 700;">{{ event.title }}</h3>
+                                    <span style="display: inline-block; background: #edf2f7; color: #667eea; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-bottom: 8px;">{{ act.event.category }}</span>
+                                    <h3 style="margin: 0 0 8px; color: #2d3748; font-size: 18px; font-weight: 700;">{{ act.event.title }}</h3>
                                     <div style="display: flex; gap: 15px; margin-bottom: 8px;">
-                                        <span style="color: #718096; font-size: 13px;">📅 {{ event.date }}</span>
-                                        <span style="color: #718096; font-size: 13px;">📍 {{ event.location }}</span>
+                                        <span style="color: #718096; font-size: 13px;">📅 {{ act.event.date }}</span>
+                                        <span style="color: #718096; font-size: 13px;">📍 {{ act.event.location }}</span>
                                     </div>
                                 </div>
                                 <div style="display: flex; gap: 10px;">
                                     <a href="#" style="padding: 8px 16px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 600;">View Ticket</a>
-                                    <a href="#" style="padding: 8px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 600; border: 2px solid #e2e8f0;">Event Details</a>
+                                    <a href="{% url 'view_event' act.event.pk %}" style="padding: 8px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 600; border: 2px solid #e2e8f0;">Event Details</a>
                                 </div>
                             </div>
                         </div>
-                        -->
-                        <!-- {% endfor %} -->
-
+                       
+                        {% endfor %}
+                        {% else %}
                         <!-- Empty State - Show when no events -->
-                        <div style="text-align: center; padding: 60px 20px; border: 2px dashed #cbd5e0; border-radius: 12px;">
+                        <div
+                            style="text-align: center; padding: 60px 20px; border: 2px dashed #cbd5e0; border-radius: 12px;">
                             <div style="font-size: 64px; margin-bottom: 15px;">🎫</div>
-                            <h3 style="margin: 0 0 10px; color: #2d3748; font-size: 20px; font-weight: 700;">No Upcoming Events</h3>
-                            <p style="margin: 0 0 20px; color: #718096; font-size: 15px;">You haven't registered for any events yet</p>
-                            <a href="{% url 'all_events' %}" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600;">Browse Events</a>
+                            <h3 style="margin: 0 0 10px; color: #2d3748; font-size: 20px; font-weight: 700;">No Upcoming
+                                Events</h3>
+                            <p style="margin: 0 0 20px; color: #718096; font-size: 15px;">You haven't registered for any
+                                events yet</p>
+                            <a href="{% url 'all_events' %}"
+                                style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600;">Browse
+                                Events</a>
                         </div>
-
-                    </div>
+                        {% endif %}
+                    </div>  
                 </div>
-
-                <!-- Recent Activity Section -->
-                <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
-                    <h2 style="margin: 0 0 25px; color: #2d3748; font-size: 24px; font-weight: 700;">Recent Activity</h2>
-
-                    <!-- Activity List - Will be populated by Django -->
-                    <div id="recentActivity" style="display: flex; flex-direction: column; gap: 15px;">
-                        
-                        <!-- Django loop: {% for activity in recent_activities %} -->
-                        <!-- Activity Item Template (for reference) -->
-                        <!--
-                        <div style="display: flex; gap: 15px; padding: 15px; background: #f7fafc; border-radius: 10px;">
-                            <div style="flex-shrink: 0; width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;">{{ activity.icon }}</div>
-                            <div style="flex: 1;">
-                                <p style="margin: 0 0 4px; color: #2d3748; font-size: 14px; font-weight: 600;">{{ activity.title }}</p>
-                                <p style="margin: 0; color: #718096; font-size: 13px;">{{ activity.description }}</p>
-                                <p style="margin: 4px 0 0; color: #a0aec0; font-size: 12px;">{{ activity.time }}</p>
-                            </div>
-                        </div>
-                        -->
-                        <!-- {% endfor %} -->
-
-                        <!-- Empty State -->
-                        <div style="text-align: center; padding: 40px 20px; border: 2px dashed #cbd5e0; border-radius: 10px;">
-                            <p style="margin: 0; color: #718096; font-size: 14px;">No recent activity</p>
-                        </div>
-
-                    </div>
-                </div>
-
             </div>
 
             <!-- Right Column -->
             <div>
-                
+
                 <!-- Quick Actions Card -->
-                <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 25px;">
+                <div
+                    style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 25px;">
                     <h3 style="margin: 0 0 20px; color: #2d3748; font-size: 20px; font-weight: 700;">Quick Actions</h3>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f7fafc; border-radius: 10px; text-decoration: none; transition: all 0.3s; border: 2px solid #e2e8f0;">
+                        <a href="#"
+                            style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f7fafc; border-radius: 10px; text-decoration: none; transition: all 0.3s; border: 2px solid #e2e8f0;">
                             <span style="font-size: 24px;">🔍</span>
                             <span style="color: #2d3748; font-weight: 600; font-size: 14px;">Browse Events</span>
                         </a>
-                        <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f7fafc; border-radius: 10px; text-decoration: none; transition: all 0.3s; border: 2px solid #e2e8f0;">
+                        <a href="#"
+                            style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f7fafc; border-radius: 10px; text-decoration: none; transition: all 0.3s; border: 2px solid #e2e8f0;">
                             <span style="font-size: 24px;">🎟️</span>
                             <span style="color: #2d3748; font-weight: 600; font-size: 14px;">My Tickets</span>
                         </a>
-                        <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f7fafc; border-radius: 10px; text-decoration: none; transition: all 0.3s; border: 2px solid #e2e8f0;">
+                        <a href="#"
+                            style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f7fafc; border-radius: 10px; text-decoration: none; transition: all 0.3s; border: 2px solid #e2e8f0;">
                             <span style="font-size: 24px;">❤️</span>
                             <span style="color: #2d3748; font-weight: 600; font-size: 14px;">Favorites</span>
                         </a>
-                        <a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f7fafc; border-radius: 10px; text-decoration: none; transition: all 0.3s; border: 2px solid #e2e8f0;">
+                        <a href="#"
+                            style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #f7fafc; border-radius: 10px; text-decoration: none; transition: all 0.3s; border: 2px solid #e2e8f0;">
                             <span style="font-size: 24px;">⚙️</span>
                             <span style="color: #2d3748; font-weight: 600; font-size: 14px;">Settings</span>
                         </a>
@@ -153,12 +116,14 @@
                 </div>
 
                 <!-- Recommended Events Card -->
-                <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 25px;">
-                    <h3 style="margin: 0 0 20px; color: #2d3748; font-size: 20px; font-weight: 700;">Recommended For You</h3>
-                    
+                <div
+                    style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 25px;">
+                    <h3 style="margin: 0 0 20px; color: #2d3748; font-size: 20px; font-weight: 700;">Recommended For You
+                    </h3>
+
                     <!-- Recommended Events List - Will be populated by Django -->
                     <div id="recommendedEvents" style="display: flex; flex-direction: column; gap: 15px;">
-                        
+
                         <!-- Django loop: {% for event in recommended_events %} -->
                         <!-- Recommended Event Card Template (for reference) -->
                         <!--
@@ -177,7 +142,8 @@
                         <!-- {% endfor %} -->
 
                         <!-- Empty State -->
-                        <div style="text-align: center; padding: 30px 15px; border: 2px dashed #cbd5e0; border-radius: 10px;">
+                        <div
+                            style="text-align: center; padding: 30px 15px; border: 2px dashed #cbd5e0; border-radius: 10px;">
                             <p style="margin: 0; color: #718096; font-size: 13px;">No recommendations yet</p>
                         </div>
 
@@ -185,20 +151,24 @@
                 </div>
 
                 <!-- Profile Completion Card -->
-                <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 16px; padding: 25px; border: 2px solid rgba(102, 126, 234, 0.2);">
-                    <h3 style="margin: 0 0 15px; color: #2d3748; font-size: 18px; font-weight: 700;">Complete Your Profile</h3>
-                    <p style="margin: 0 0 15px; color: #4a5568; font-size: 13px; line-height: 1.6;">Add more information to get personalized event recommendations</p>
-                    <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 10px;">
+                <div
+                    style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 16px; padding: 25px; border: 2px solid rgba(102, 126, 234, 0.2);">
+                    <h3 style="margin: 0 0 15px; color: #2d3748; font-size: 18px; font-weight: 700;">Complete Your
+                        Profile</h3>
+                    <p style="margin: 0 0 15px; color: #4a5568; font-size: 13px; line-height: 1.6;">Add more information
+                        to get personalized event recommendations</p>
+                    <div
+                        style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 10px;">
                         <!-- <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100%; width: {{ profile_completion_percentage }} %;"></div> -->
                     </div>
-                    <p style="margin: 0 0 15px; color: #667eea; font-size: 13px; font-weight: 600;">{{ profile_completion_percentage }}% Complete</p>
-                    <a href="#" style="display: block; text-align: center; padding: 10px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600;">Complete Profile</a>
+                    <p style="margin: 0 0 15px; color: #667eea; font-size: 13px; font-weight: 600;">{{
+                        profile_completion_percentage }}% Complete</p>
+                    <a href="#"
+                        style="display: block; text-align: center; padding: 10px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600;">Complete
+                        Profile</a>
                 </div>
 
             </div>
         </div>
 
     </div>
-
-</body>
-</html>

@@ -44,10 +44,23 @@ class RegistrationForm(UserCreationForm):
 class LoginForm(forms.Form):
     email = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+    widgets = {
+        'email': forms.TextInput(attrs={
+            'class': 'form-control'
+        }),
+        'password': forms.PasswordInput(attrs={
+            'class': 'form-control'
+        })
+    }
 
 
 class ForgotPasswordForm(forms.Form):
     email = forms.CharField()
+    widgets = {
+        'email': forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    }
     
 
 class ResetPasswordForm(forms.ModelForm):
@@ -68,9 +81,9 @@ class ResetPasswordForm(forms.ModelForm):
 
 
 class ChangePasswordForm(PasswordChangeForm):
-    old_password = forms.PasswordInput()
-    new_password = forms.PasswordInput()
-    confirm_password = forms.PasswordInput()
+    old_password = forms.CharField()
+    new_password = forms.CharField()
+    confirm_password = forms.CharField()
     widgets = {
         'old_password': forms.PasswordInput(attrs={
             'class': 'form-control',

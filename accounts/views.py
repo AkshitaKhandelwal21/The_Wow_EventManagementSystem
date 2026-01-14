@@ -1,9 +1,11 @@
 from django.utils import timezone
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, View
 from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
+from django.urls import reverse_lazy
+from django.contrib import messages
 from accounts.forms import ChangePasswordForm, EditProfileForm, ForgotPasswordForm, LoginForm, RegistrationForm, ResetPasswordForm
 from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -123,7 +125,8 @@ class LoginView(TemplateView):
                 return redirect('user-dashboard')
             elif user.role=="organizer":
                 return redirect('org-dashboard')
-        
+            
+        messages.error(request, "Invalid username or password")        
         return render(request, self.template_name, {'form': LoginForm()})
     
 
@@ -210,7 +213,7 @@ class ProfilePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile'] = CustomUser.objects.filter(id=self.request.user.id)
+        context['user'] = self.request.user
         return context
     
 
@@ -219,16 +222,46 @@ class EditProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs) 
-        user = get_object_or_404(CustomUser, id=self.kwargs['id'])
-        context['form'] = EditProfileForm(instance=user)
-        context['user'] = user
+        # user = get_object_or_404(CustomUser, id=self.kwargs['id'])
+        context['form'] = EditProfileForm(instance=self.request.user)
+        # context['user'] = user
         return context
 
     def post(self, request, *args, **kwargs):
-        user = get_object_or_404(CustomUser, id=self.kwargs['id'])
-        form = EditProfileForm(request.POST, request.FILES, instance=user)
+        # user = get_object_or_404(CustomUser, id=self.kwargs['id'])
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect('profile')
         
-        return self.render_to_response({'form': form, 'user': user})    
+        return self.render_to_response({'form': form})    
+    
+
+class DeleteProfileView(LoginRequiredMixin, View):
+    model = CustomUser
+    # success_url = reverse_lazy('login')
+
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(CustomUser, id=self,kwargs=['id'])
+        user.delete()
+        return redirect('login')
+    
+
+class AllUsersView(TemplateView):
+    template_name = 'all_users.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        users = CustomUser.objects.filter(role='user').all()
+        context['users'] = users
+        return context
+    
+
+class AllOrganizersView(TemplateView):
+    template_name = "all_organizers.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        orgs = CustomUser.objects.filter(role='organizer').all()
+        context['users'] = orgs
+        return context

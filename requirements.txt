@@ -1,2 +1,8 @@
 django
 pillow
+django-allauth
+requests
+jwt
+PyJWT
+django-crispy-
+crispy-bootstrap4
