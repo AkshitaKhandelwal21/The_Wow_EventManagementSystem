@@ -1,0 +1,74 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav style="background: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 100;">
+        <div
+            style="max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; height: 70px;">
+
+            <!-- Logo -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 24px;">🎉</span>
+                </div>
+                <h2 style="margin: 0; color: #2d3748; font-size: 22px; font-weight: 700;">The-Wow</h2>
+            </div>
+
+            <!-- Right Menu -->
+            <div style="display: flex; align-items: center; gap: 25px;">
+                <a href="{% url 'all_events' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Browse Events</a>
+                <a href="#" style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 15px;">My
+                    Dashboard</a>
+                <a href="{% url 'reg-events' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My Tickets</a>
+                <div style="position: relative; display: inline-block;">
+                    <!-- Avatar -->
+                    <div id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-weight: 700; cursor: pointer;">
+                        {{ request.user.name|slice:":1"|upper }}
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div id="userDropdown" style="display: none; position: absolute; right: 0; margin-top: 10px;
+        background: white; border-radius: 12px; width: 180px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden; z-index: 1000;">
+
+                        <a href="{% url 'profile' %}" style="display: block; padding: 12px 16px; color: #2d3748;
+            text-decoration: none; font-size: 14px;">
+                            👤 Profile
+                        </a>
+                        <a href="{% url 'logout' %}" style="display: block; padding: 12px 16px; color: #2d3748;
+            text-decoration: none; font-size: 14px;">
+                            🚪 Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+<script>
+    const avatar = document.getElementById('userAvatar');
+    const dropdown = document.getElementById('userDropdown');
+
+    avatar.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.style.display =
+            dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', function () {
+        dropdown.style.display = 'none';
+    });
+</script>
+</html>

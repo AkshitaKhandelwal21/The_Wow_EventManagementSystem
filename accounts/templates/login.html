@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Event Registration</title>
 </head>
 
@@ -21,8 +22,26 @@
 
         <form method="POST" style="display: flex; flex-direction: column; gap: 20px;" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form }}
-
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger">
+                {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+            
+            <div>
+                <label
+                    style="display: block; margin-bottom: 2px; color: #2d3748; font-size: 15px; font-weight: 600;">Email
+                </label>
+                {{form.email}}
+            </div>
+            <div>
+                <label
+                    style="display: block; margin-bottom: 2px; color: #2d3748; font-size: 15px; font-weight: 600;">Password
+                </label>
+                {{form.password}}
+            </div>
             <button type="submit"
                 style="width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);"
                 onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)'"
@@ -33,7 +52,8 @@
 
         <div style="text-align: center; margin-top: 25px; padding-top: 25px; border-top: 1px solid #e2e8f0;">
             <div>
-                <a href="{% url 'forgot-password' %}" style="color: #667eea; text-decoration: none; font-weight: 600; margin-left: 5px;">Forgot
+                <a href="{% url 'forgot-password' %}"
+                    style="color: #667eea; text-decoration: none; font-weight: 600; margin-left: 5px;">Forgot
                     Password?</a>
             </div>
             <br>

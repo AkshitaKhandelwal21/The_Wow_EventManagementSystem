@@ -26,6 +26,19 @@ class CreateEventForm(forms.ModelForm):
                 'type': 'time',
                 'class': 'form-control'
             }),
+            'duration': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            'seats': forms.NumberInput(attrs={
+                'class': 'form-control'
+            }),
+            'address': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the address'
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control'
+            }),
         }
 
 
@@ -53,6 +66,16 @@ class EditEventForm(forms.ModelForm):
             'time': forms.TimeInput(attrs={
                 'type': 'time',
                 'class': 'form-control'
+            }),
+            'duration': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            'seats': forms.NumberInput(attrs={
+                'class': 'form-control'
+            }),
+            'address': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the address'
             }),
         }
 

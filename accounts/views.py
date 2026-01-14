@@ -5,6 +5,7 @@ from django.views.generic import TemplateView, FormView, View
 from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
 from django.urls import reverse_lazy
+from django.contrib import messages
 from accounts.forms import ChangePasswordForm, EditProfileForm, ForgotPasswordForm, LoginForm, RegistrationForm, ResetPasswordForm
 from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -124,7 +125,8 @@ class LoginView(TemplateView):
                 return redirect('user-dashboard')
             elif user.role=="organizer":
                 return redirect('org-dashboard')
-        
+            
+        messages.error(request, "Invalid username or password")        
         return render(request, self.template_name, {'form': LoginForm()})
     
 

@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Events</title>
-</head>
-
-<body
-    style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f7fafc; min-height: 100vh;">
-
+{% block navbar %}
     <!-- Top Navigation Bar -->
     <nav style="background: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 100;">
         <div
@@ -64,8 +55,11 @@
             </div>
         </div>
     </nav>
+{% endblock %}
+
 
     <!-- Main Content -->
+     {% block filter %}
     <div style="max-width: 1400px; margin: 0 auto; padding: 40px;">
 
         <!-- Page Header -->
@@ -120,7 +114,9 @@
         </div>
 
     </div>
+    {% endblock %}
 
+    {% block event_list %}
     <!-- Event Card Template (for backend integration reference) -->
     {% if events %}
     {% for event in events %}
@@ -213,11 +209,10 @@
             <span>Create Event</span>
         </a>
     </div>
-
     {% endif %}
+    {% endblock %}
 
-
-
+    {% block pagination %}
     <!-- Pagination - Show when events exist -->
     <div
         style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 40px; padding: 30px;">
@@ -239,22 +234,4 @@
             style="padding: 10px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">Next
             →</a>
     </div>
-
-
-</body>
-<script>
-    const avatar = document.getElementById('userAvatar');
-    const dropdown = document.getElementById('userDropdown');
-
-    avatar.addEventListener('click', function (e) {
-        e.stopPropagation();
-        dropdown.style.display =
-            dropdown.style.display === 'block' ? 'none' : 'block';
-    });
-
-    document.addEventListener('click', function () {
-        dropdown.style.display = 'none';
-    });
-</script>
-
-</html>
+    {% endblock %}

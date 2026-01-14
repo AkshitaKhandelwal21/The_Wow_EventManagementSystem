@@ -35,9 +35,10 @@
                 <a href="{% url 'reg-events' %}"
                     style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
                     Tickets</a>
-                <div
-                    style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer;">
-                    {{ user.first_name.0 }}{{ user.last_name.0 }}</div>
+                <a href="{% url 'logout' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">
+                    Logout
+                </a>
             </div>
         </div>
     </nav>
