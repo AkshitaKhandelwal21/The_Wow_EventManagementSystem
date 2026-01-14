@@ -54,6 +54,24 @@ class LoginForm(forms.Form):
     }
 
 
+class PhoneNumberForm(forms.Form):
+    phone = forms.CharField(widget=forms.TextInput)
+    widgets = {
+    'phone': forms.TextInput(attrs={
+        'class': 'form-control'
+    }),
+    }
+
+
+class OTPForm(forms.Form):
+    otp = forms.CharField(widget=forms.TextInput)
+    widgets = {
+    'otp': forms.TextInput(attrs={
+        'class': 'form-control'
+    }),
+    }
+
+
 class ForgotPasswordForm(forms.Form):
     email = forms.CharField()
     widgets = {
