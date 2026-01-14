@@ -1,2 +1,6 @@
 django
 pillow
+django-allauth
+requests
+jwt
+PyJWT
