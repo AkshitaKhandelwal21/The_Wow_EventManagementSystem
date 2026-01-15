@@ -5,3 +5,7 @@ requests
 jwt
 PyJWT
 twilio
+celery 
+redis 
+django-celery-beat 
+django-celery-results

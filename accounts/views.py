@@ -10,7 +10,8 @@ from accounts.forms import ChangePasswordForm, EditProfileForm, ForgotPasswordFo
 from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from accounts.utils import create_password_verification_token, create_verification_token, send_OTP, send_email, send_pass_reset_mail
+from accounts.tasks import send_email_verification_mail
+from accounts.utils import create_password_verification_token, create_verification_token, send_OTP, send_pass_reset_mail
 
 # Create your views here.
 class SignupView(TemplateView):
@@ -33,7 +34,7 @@ class SignupView(TemplateView):
             # user.email_verification_sent_at = timezone.now()
             # user.save()
             request.session['email'] = user.email
-            send_email(user, token_obj.token)
+            send_email_verification_mail.delay(user.name, user.email, token_obj.token)
             return redirect('verify-email')
         
         return self.render_to_response({'form': form})
@@ -89,7 +90,7 @@ class ResendVerificationLink(TemplateView):
         if not user.email_verified:
             print("verifying email")
             token_obj = create_verification_token(user)
-            send_email(user, token_obj.token)
+            send_email_verification_mail(user.name, user.email, token_obj.token)
             return redirect('verify-email')
         
         return redirect('signup')
