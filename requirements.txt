@@ -4,5 +4,8 @@ django-allauth
 requests
 jwt
 PyJWT
-django-crispy-
-crispy-bootstrap4
+twilio
+celery 
+redis 
+django-celery-beat 
+django-celery-results

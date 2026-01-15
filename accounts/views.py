@@ -6,11 +6,12 @@ from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
 from django.urls import reverse_lazy
 from django.contrib import messages
-from accounts.forms import ChangePasswordForm, EditProfileForm, ForgotPasswordForm, LoginForm, RegistrationForm, ResetPasswordForm
+from accounts.forms import ChangePasswordForm, EditProfileForm, ForgotPasswordForm, LoginForm, OTPForm, PhoneNumberForm, RegistrationForm, ResetPasswordForm
 from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from accounts.utils import create_password_verification_token, create_verification_token, send_email, send_pass_reset_mail
+from accounts.tasks import send_email_verification_mail
+from accounts.utils import create_password_verification_token, create_verification_token, send_OTP, send_pass_reset_mail
 
 # Create your views here.
 class SignupView(TemplateView):
@@ -33,7 +34,7 @@ class SignupView(TemplateView):
             # user.email_verification_sent_at = timezone.now()
             # user.save()
             request.session['email'] = user.email
-            send_email(user, token_obj.token)
+            send_email_verification_mail.delay(user.name, user.email, token_obj.token)
             return redirect('verify-email')
         
         return self.render_to_response({'form': form})
@@ -89,7 +90,7 @@ class ResendVerificationLink(TemplateView):
         if not user.email_verified:
             print("verifying email")
             token_obj = create_verification_token(user)
-            send_email(user, token_obj.token)
+            send_email_verification_mail(user.name, user.email, token_obj.token)
             return redirect('verify-email')
         
         return redirect('signup')
@@ -128,6 +129,47 @@ class LoginView(TemplateView):
             
         messages.error(request, "Invalid username or password")        
         return render(request, self.template_name, {'form': LoginForm()})
+    
+
+class OTPVerificationView(TemplateView):
+    template_name = 'phone_num.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = PhoneNumberForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        phone = request.POST.get('phone')
+        user = CustomUser.objects.filter(phone=phone).first()
+        if not user:
+            messages.error(request, "Phone number not registered")
+            return redirect('login')
+        otp = send_OTP(phone)
+        request.session['otp'] = otp
+        request.session['phone'] = phone
+        return redirect('verify-otp')
+        
+        
+class VerifyOTP(TemplateView):
+    template_name = 'get_otp.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = OTPForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        input_otp = request.POST.get('otp')
+        otp = request.session.get('otp')
+        phone = request.session.get('phone')
+
+        if str(input_otp) == str(otp):
+            user = CustomUser.objects.get(phone=phone)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            request.session.pop('otp')
+            request.session.pop('phone')
+            return redirect('profile')
     
 
 class LogoutView(LoginRequiredMixin ,TemplateView):

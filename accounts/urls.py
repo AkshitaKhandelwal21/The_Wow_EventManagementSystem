@@ -17,4 +17,6 @@ urlpatterns = [
     path('delete_user/<int:id>', views.DeleteProfileView.as_view(), name='delete-user'),
     path('all_users/', views.AllUsersView.as_view(), name='all_users'),
     path('all_orgs/', views.AllOrganizersView.as_view(), name='all_orgs'),
+    path('phone_url/', views.OTPVerificationView.as_view(), name='phone'),
+    path('verify_otp', views.VerifyOTP.as_view(), name='verify-otp'),
 ]

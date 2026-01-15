@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -122,6 +124,13 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 TOKEN_EXPIRY_HOURS = os.getenv('TOKEN_EXPIRY_HOURS')
 
 
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_TASK_SERIALIZER = os.getenv('CELERY_TASK_SERIALIZER')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
+CELERY_RESULT_SERIALIZER = os.getenv('CELERY_RESULT_SERIALIZER')
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -179,3 +188,8 @@ ACCOUNT_LOGIN_METHODS = {"email"}
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_FORMS = {'signup': 'mysite.forms.MyCustomSocialSignupForm'}
 SOCIALACCOUNT_ADAPTER = "accounts.adapters.CustomSocialAccountAdapter"
+
+
+# Twilio otp settings
+ACCOUNT_SID = os.getenv('ACCOUNT_SID')
+AUTH_TOKEN = os.getenv('AUTH_TOKEN')
