@@ -8,7 +8,6 @@ from django.contrib.auth import login
 from datetime import timedelta
 from The_Wow import settings
 from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
-from twilio.rest import Client
 
 
 def create_verification_token(user):
@@ -67,13 +66,3 @@ def send_pass_reset_mail(user, token):
      except Exception as e:
           raise e
      
-
-def send_OTP(phone):
-     client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
-     otp = str(random.randint(10000, 99999))
-     client.messages.create(
-          body=f"Your otp is {otp}. Please do share it with anyone",
-          from_='+1 762 372 7017',
-          to='+91' + phone
-     )
-     return otp
