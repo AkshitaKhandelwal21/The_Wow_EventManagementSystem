@@ -143,7 +143,7 @@ class ChangePasswordForm(PasswordChangeForm):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['profile_photo', 'name', 'phone']
+        fields = ['profile_photo', 'name', 'phone', 'city', 'state', 'pin', 'bio']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',

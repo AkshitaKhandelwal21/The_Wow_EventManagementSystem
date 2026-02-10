@@ -15,44 +15,7 @@
                 <h2 style="margin: 0; color: #2d3748; font-size: 22px; font-weight: 700;">The-Wow</h2>
             </div>
 
-            <!-- Right Menu -->
-            <div style="display: flex; align-items: center; gap: 25px;">
-                <a href="{% url 'org-dashboard' %}"
-                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Dashboard</a>
-                <a href="#" style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 15px;">My
-                    Events</a>
-                <a href="#"
-                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Analytics</a>
-                <a href="{% url 'new_event' %}"
-                    style="display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 14px;">
-                    <span>➕</span>
-                    <span>Create Event</span>
-                </a>
-                <div style="position: relative; display: inline-block;">
-                    <!-- Avatar -->
-                    <div id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex; align-items: center; justify-content: center;
-        color: white; font-weight: 700; cursor: pointer;">
-                        {{ request.user.name|slice:":1"|upper }}
-                    </div>
-
-                    <!-- Dropdown -->
-                    <div id="userDropdown" style="display: none; position: absolute; right: 0; margin-top: 10px;
-        background: white; border-radius: 12px; width: 180px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden; z-index: 1000;">
-
-                        <a href="" style="display: block; padding: 12px 16px; color: #2d3748;
-            text-decoration: none; font-size: 14px;">
-                            👤 Profile
-                        </a>
-                        <a href="{% url 'logout' %}" style="display: block; padding: 12px 16px; color: #2d3748;
-            text-decoration: none; font-size: 14px;">
-                            🚪 Logout
-                        </a>
-                    </div>
-                </div>
-            </div>
+            {% include 'org_header.html' %}
         </div>
     </nav>
 {% endblock %}
