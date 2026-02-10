@@ -6,6 +6,6 @@ jwt
 PyJWT
 twilio
 celery 
-redis 
+redis
 django-celery-beat 
 django-celery-results

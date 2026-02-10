@@ -48,6 +48,14 @@ class CustomUser(AbstractUser, TimeStamps):
     objects = UserManager()
 
 
+class CardModel(TimeStamps, models.Model):
+    card_holder = models.CharField(max_length=256)
+    card_number_hash = models.CharField(max_length=128, unique=True)
+    card_number_django_hash = models.CharField(max_length=256, unique=True)
+    last4 = models.CharField(max_length=4)
+    expiration = models.DateField()
+
+
 class EmailVerificationToken(models.Model):
     user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
     token = models.CharField(max_length=64, unique=True)

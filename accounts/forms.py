@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from accounts.models import CustomUser
+from accounts.models import CardModel, CustomUser
 from django.contrib.auth.forms import PasswordChangeForm
 
 class RegistrationForm(UserCreationForm):
@@ -33,11 +33,33 @@ class RegistrationForm(UserCreationForm):
             }),
             'phone': forms.TextInput(attrs={
                 'class': 'form-control',
+                'id': 'phone',
                 'placeholder': 'Enter your phone number'
             }),
             'role': forms.Select(attrs={
                 'class': 'form-control'
             })
+        }
+
+
+class CardDetailsForm(forms.ModelForm):
+    card_number = forms.CharField(max_length=19, widget=forms.TextInput(attrs={
+        'class': 'form-control'
+    }))
+    class Meta:
+        model = CardModel
+        fields = ['card_number', 'card_holder', 'expiration']
+        widgets = {
+            'card_number': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            'card_holder': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            'expiration': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
         }
 
 

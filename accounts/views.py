@@ -6,12 +6,13 @@ from django.contrib.auth import authenticate, login, logout
 from The_Wow import settings
 from django.urls import reverse_lazy
 from django.contrib import messages
-from accounts.forms import ChangePasswordForm, EditProfileForm, ForgotPasswordForm, LoginForm, OTPForm, PhoneNumberForm, RegistrationForm, ResetPasswordForm
-from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken
+from accounts.forms import ChangePasswordForm, EditProfileForm, ForgotPasswordForm, LoginForm, OTPForm, PhoneNumberForm, RegistrationForm, ResetPasswordForm, CardDetailsForm
+from accounts.models import CardModel, CustomUser, EmailVerificationToken, PasswordVerificationToken
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from accounts.service import AccountsService
 from accounts.tasks import send_email_verification_mail
-from accounts.utils import create_password_verification_token, create_verification_token, send_OTP, send_pass_reset_mail
+from accounts.utils import create_password_verification_token, create_verification_token, send_pass_reset_mail
 
 # Create your views here.
 class SignupView(TemplateView):
@@ -19,26 +20,58 @@ class SignupView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = RegistrationForm()
+        context['form1'] = RegistrationForm(prefix='form1')
+        context['form2'] = CardDetailsForm(prefix='form2')
+        form1_data = CustomUser.objects.all()
+        form2_data = CardModel.objects.all()
+        context['form1_data'] = form1_data
+        context['form2_data'] = form2_data
+
         return context
     
     def post(self, request, *args, **kwargs):
-        form = RegistrationForm(request.POST, request.FILES)
+        form1 = RegistrationForm(request.POST, request.FILES, prefix="form1")
+        form2 = CardDetailsForm(request.POST, prefix="form2")
         # user = CustomUser.objects.filter(email=form.email)
+        if 'submit_form1' in request.POST:
+            if form1.is_valid():
+                user = form1.save()
+                user.save()
+                token_obj = create_verification_token(user)
 
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
-            token_obj = create_verification_token(user)
-            # user.email_verification_token = create_verification_token(user)
-            # user.email_verification_sent_at = timezone.now()
-            # user.save()
-            request.session['email'] = user.email
-            send_email_verification_mail.delay(user.name, user.email, token_obj.token)
+                request.session['email'] = user.email
+                send_email_verification_mail.delay(user.name, user.email, token_obj.token)
+                # return redirect('verify-email')
+                return redirect('save_card')
+            
+        return render(request, 'register.html', {
+            'form1': form1
+        })
+    
+
+class SaveCardView(TemplateView):
+    template_name = 'save_card.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form2'] = CardDetailsForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form2 = CardDetailsForm(request.POST)
+        if form2.is_valid():
+            card_number = form2.cleaned_data['card_number']
+            card = form2.save(commit=False)
+            sha_hash = AccountsService.sha_hash256(self, card_number)
+            django_hash_value = AccountsService.django_hash(self, card_number)
+            card.card_number_hash = sha_hash
+            card.card_number_django_hash = django_hash_value
+            card.last4 = card_number[-4:]
+            card.save()
             return redirect('verify-email')
         
-        return self.render_to_response({'form': form})
-
+        return render(request, self.template_name, {'form2': form2})
+    
 
 class VerifyEmailPageView(TemplateView):
     template_name = 'verify_email.html'
@@ -145,7 +178,7 @@ class OTPVerificationView(TemplateView):
         if not user:
             messages.error(request, "Phone number not registered")
             return redirect('login')
-        otp = send_OTP(phone)
+        otp = AccountsService.send_OTP(phone)
         request.session['otp'] = otp
         request.session['phone'] = phone
         return redirect('verify-otp')

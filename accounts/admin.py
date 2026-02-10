@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from accounts.models import CustomUser, EmailVerificationToken, PasswordVerificationToken, TimeStamps
+from accounts.models import CardModel, CustomUser, EmailVerificationToken, PasswordVerificationToken, TimeStamps
 
 class UserAdmin(BaseUserAdmin):
     list_display = [
@@ -31,3 +31,4 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(CustomUser, UserAdmin)
 admin.site.register(EmailVerificationToken)
 admin.site.register(PasswordVerificationToken)
+admin.site.register(CardModel)
