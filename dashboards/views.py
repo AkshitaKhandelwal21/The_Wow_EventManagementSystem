@@ -5,12 +5,19 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboards.forms import CreateEventForm, EditEventForm
 from .models import Event, EventRegistration
+from django.utils.timezone import now
 
 # Create your views here.
 
 class OrganizerDashboardView(TemplateView):
     template_name = 'organizer/organizer_dashboard.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_events'] = Event.objects.filter(user=self.request.user).count()
+        context['total_attendees'] = EventRegistration.objects.filter(
+            event__user=self.request.user).count()
+        return context
     
 class UserDashboardView(TemplateView):
     template_name = "user/user_dashboard.html"
@@ -69,6 +76,10 @@ class ViewEvent(LoginRequiredMixin, TemplateView):
         attendees = EventRegistration.objects.filter(event=event).count()
         context['attendees'] = attendees
         context['is_reg'] = is_reg
+        today = now().date()
+        context['similar_events'] = Event.objects.filter(
+            category = event.category, date__gte=today
+        ).exclude(id=event.id)[:3]
         return context
     
 

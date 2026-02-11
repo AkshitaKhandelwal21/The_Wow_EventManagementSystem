@@ -156,7 +156,7 @@
                                 <p style="margin: 0; color: #2d3748; font-size: 16px; font-weight: 600;">{{event.venue}}
                                 </p>
                                 {% if event.address %}
-                                <p style="margin: 5px 0 0; color: #4a5568; font-size: 14px;">FULL_ADDRESS</p>
+                                <p style="margin: 5px 0 0; color: #4a5568; font-size: 14px;">{{event.address}}</p>
                                 {% endif %}
                                 <a href="https://www.google.com/maps/dir/?api=1&destination={{ event.address|urlencode }}" target="_blank"
                                     style="text-decoration: none; display: inline-block; margin-top: 8px; color: #667eea; font-size: 14px; font-weight: 600; text-decoration: none;">View
@@ -209,7 +209,8 @@
             </div>
 
             <!-- Right Column - Ticket/Registration Card -->
-             {% if not is_reg %}
+            {% if request.user.role == "user" %}
+            {% if not is_reg %}
             <div>
 
                 <!-- Sticky Registration Card -->
@@ -278,6 +279,7 @@
                 </div>
             </div>
             {% endif %}
+            {% endif %}
         </div>
     </div>
 
@@ -290,17 +292,13 @@
             <!-- Similar Events Grid - Will be populated by backend -->
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
 
+                {% for eve in similar_events %}
                 <!-- Placeholder cards (remove when integrating with backend) -->
                 <div
                     style="background: #f7fafc; border: 2px dashed #cbd5e0; border-radius: 16px; height: 350px; display: flex; align-items: center; justify-content: center; color: #a0aec0; font-size: 14px;">
-                    Similar Event Card 1</div>
-                <div
-                    style="background: #f7fafc; border: 2px dashed #cbd5e0; border-radius: 16px; height: 350px; display: flex; align-items: center; justify-content: center; color: #a0aec0; font-size: 14px;">
-                    Similar Event Card 2</div>
-                <div
-                    style="background: #f7fafc; border: 2px dashed #cbd5e0; border-radius: 16px; height: 350px; display: flex; align-items: center; justify-content: center; color: #a0aec0; font-size: 14px;">
-                    Similar Event Card 3</div>
-
+                    {{eve.title}}</div>
+                
+                {% endfor %}
             </div>
         </div>
     </div>

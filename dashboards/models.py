@@ -26,10 +26,11 @@ class Event(TimeStamps, models.Model):
     time = models.TimeField()
     duration = models.IntegerField(default=2)
     address = models.CharField(max_length=500, null=True)
-    seats = models.IntegerField(null=True)
+    seats = models.IntegerField(null=True, blank=True)
+    price = models.DecimalField(null=True, blank=True)
     image = models.ImageField(upload_to='events/', blank=True)
 
-    class Meta:
+    class Meta: 
         ordering = ["-date", "-time"]
         indexes = [
             models.Index(fields=["date"]),
