@@ -1,0 +1,9 @@
+<h2>Your Event Ticket</h2>
+
+<p><strong>Event:</strong> {{ registration.event.title }}</p>
+<p><strong>Name:</strong> {{ registration.user.name }}</p>
+
+<img src="{% url 'qr-image' registration.qr_token %}" alt="QR Code"
+style="width: 200px; height: 200px; display: block; margin: 20px auto;">
+
+<p>Scan this QR code at the event entrance.</p>

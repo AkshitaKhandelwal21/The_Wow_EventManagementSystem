@@ -90,7 +90,7 @@
                                 <div
                                     style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
                                     <span style="font-size: 18px;">📍</span>
-                                    <span>{{ ticket.event.venue }}</span>
+                                    <span>{{ ticket.event.location }}</span>
                                 </div>
                                 <!-- <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
                                     <span style="font-size: 18px;">🎟️</span>
@@ -112,7 +112,7 @@
                             <a href="#"
                                 style="padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600;">View
                                 Ticket</a>
-                            <a href="#"
+                            <a href="{% url 'view_event' ticket.event.id %}"
                                 style="padding: 10px 20px; background: white; color: #4a5568; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">Event
                                 Details</a>
                         </div>

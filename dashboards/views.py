@@ -1,8 +1,12 @@
+from io import BytesIO
+from django.http import HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, View
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+import qrcode
 from dashboards.forms import CreateEventForm, EditEventForm
 from .models import Event, EventRegistration
 from django.utils.timezone import now
@@ -57,9 +61,8 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['events'] = Event.objects.filter(user=self.request.user)
+        context['events'] = Event.objects.filter(user=self.request.user).order_by('date', 'time')
         return context
-    
 
 class ViewEvent(LoginRequiredMixin, TemplateView):
     template_name = 'organizer/view_event.html'
@@ -71,11 +74,14 @@ class ViewEvent(LoginRequiredMixin, TemplateView):
             Event.objects.select_related('user'), id=event_id
         )
         context['event'] = event
-        is_reg = EventRegistration.objects.filter(
-            user=self.request.user, event=event).exists()
+        registration = EventRegistration.objects.filter(
+            user=self.request.user, event=event
+        ).first()
+        context['registration'] = registration
+        context['is_reg'] = registration is not None
+
         attendees = EventRegistration.objects.filter(event=event).count()
         context['attendees'] = attendees
-        context['is_reg'] = is_reg
         today = now().date()
         context['similar_events'] = Event.objects.filter(
             category = event.category, date__gte=today
@@ -134,12 +140,9 @@ class UserRegisterView(TemplateView):
             user=request.user, event=event
         )
         if created:
-            messages.success(request, "You have successfully registered for this event")
             if event.seats:
                 event.seats -= 1
                 event.save(update_fields=['seats'])
-        else:
-            messages.info(request, "You are already registered for this event")
 
         return redirect('view_event', pk=event.pk)   
     # Redirect to registered events page
@@ -150,5 +153,48 @@ class MyRegisteredEventsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tickets'] = EventRegistration.objects.filter(user=self.request.user)
+        context['tickets'] = EventRegistration.objects.filter(user=self.request.user).order_by('date')
         return context
+    
+
+class QRImageView(View):
+
+    def get(self, request, *args, **kwargs):
+        token = self.kwargs['token']
+
+        registration = get_object_or_404(
+            EventRegistration,
+            qr_token=token,
+            user=request.user
+        )
+
+        qr_data = request.build_absolute_uri(
+            f"/event/verify-ticket/{registration.qr_token}/"
+        )
+
+        img = qrcode.make(qr_data)
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        buffer.seek(0)
+
+        return HttpResponse(buffer, content_type='image/png')
+
+
+class TicketQRView(TemplateView):
+    template_name = 'user/ticket_qr.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        registration = get_object_or_404(EventRegistration, pk=self.kwargs['pk'], user=self.request.user)
+        context['registration'] = registration
+        return context
+    
+
+class VerifyTicketView(View):
+
+    def get(self, request, *args, **kwargs):
+        qr_token = self.kwargs['qr_token']
+        registration = get_object_or_404(EventRegistration, qr_token=qr_token)
+        if registration.event.date < now().date():
+            return HttpResponse("This ticket is for an event that has already passed.")
+        return HttpResponse(f"Ticket for {registration.event.title} is valid for user {registration.user.username}")

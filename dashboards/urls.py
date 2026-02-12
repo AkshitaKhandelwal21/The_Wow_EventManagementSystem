@@ -13,4 +13,7 @@ urlpatterns = [
     path('all_events/', views.AllEventsView.as_view(), name='all_events'),
     path('<int:pk>/register/', views.UserRegisterView.as_view(), name='user-register'),
     path('reg_events/', views.MyRegisteredEventsView.as_view(), name='reg-events'),
-]   
+    path("ticket/<int:pk>/", views.TicketQRView.as_view(), name="ticket-qr"),
+    path("qr/<uuid:token>/", views.QRImageView.as_view(), name="qr-image"),
+    path("verify-ticket/<uuid:token>/", views.VerifyTicketView.as_view(), name="verify-ticket"),
+]

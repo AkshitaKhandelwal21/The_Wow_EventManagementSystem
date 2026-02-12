@@ -2,22 +2,7 @@
 
 {% block navbar %}
     <!-- Top Navigation Bar -->
-    <nav style="background: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 100;">
-        <div
-            style="max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; height: 70px;">
-
-            <!-- Logo -->
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div
-                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                    <span style="font-size: 24px;">🎉</span>
-                </div>
-                <h2 style="margin: 0; color: #2d3748; font-size: 22px; font-weight: 700;">The-Wow</h2>
-            </div>
-
             {% include 'org_header.html' %}
-        </div>
-    </nav>
 {% endblock %}
 
 
@@ -127,7 +112,7 @@
             <div
                 style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px; color: #718096; font-size: 14px;">
                 <span style="font-size: 16px;">📍</span>
-                <span>{{ event.venue }}</span>
+                <span>{{ event.location }}</span>
             </div>
 
             <!-- Stats (placeholders for now) -->
