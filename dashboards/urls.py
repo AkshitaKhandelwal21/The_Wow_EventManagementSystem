@@ -16,4 +16,6 @@ urlpatterns = [
     path("ticket/<int:pk>/", views.TicketQRView.as_view(), name="ticket-qr"),
     path("qr/<uuid:token>/", views.QRImageView.as_view(), name="qr-image"),
     path("verify-ticket/<uuid:token>/", views.VerifyTicketView.as_view(), name="verify-ticket"),
+    path('attendees_list/', views.AttendeesListView.as_view(), name='attendees'),
+    path('event/export-attendees/', views.ExportAttendeesCSVView.as_view(), name='export_attendees_csv'),
 ]

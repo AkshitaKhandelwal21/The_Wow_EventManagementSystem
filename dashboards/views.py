@@ -10,6 +10,7 @@ import qrcode
 from dashboards.forms import CreateEventForm, EditEventForm
 from .models import Event, EventRegistration
 from django.utils.timezone import now
+import csv
 
 # Create your views here.
 
@@ -198,3 +199,34 @@ class VerifyTicketView(View):
         if registration.event.date < now().date():
             return HttpResponse("This ticket is for an event that has already passed.")
         return HttpResponse(f"Ticket for {registration.event.title} is valid for user {registration.user.username}")
+    
+
+class AttendeesListView(TemplateView):
+    template_name = 'organizer/attendees.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        events = Event.objects.filter(user=self.request.user)
+        attendees = EventRegistration.objects.filter(event__in=events)
+        context['attendees'] = attendees
+        context['total_attendees'] = attendees.count()
+        return context
+
+
+class ExportAttendeesCSVView(View):
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Dispostion'] = 'attachment; filename="attendees_list.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['Event Title', 'Attendee Name', 'Email', 'Phone', 'Registered On'])
+        events = Event.objects.filter(user=request.user).prefetch_related('registrations__user')
+
+        for event in events:
+            for registration in event.registrations.all():
+                user = registration.user
+                writer.writerow([
+                    event.title, user.name, user.email, user.phone, registration.created_at
+                ])
+
+        return response
