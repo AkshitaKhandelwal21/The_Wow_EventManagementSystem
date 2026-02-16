@@ -1,202 +1,261 @@
 {% include 'user_header.html' %}
 
-    <!-- Main Content -->
-    <div style="max-width: 1400px; margin: 0 auto; padding: 40px;">
+<!-- Main Content -->
+<div style="max-width: 1400px; margin: 0 auto; padding: 40px;">
 
-        <!-- Page Header -->
-        <div style="margin-bottom: 35px;">
-            <h1 style="margin: 0 0 10px; color: #2d3748; font-size: 36px; font-weight: 700;">My Tickets</h1>
+    <!-- Page Header -->
+    <div style="margin-bottom: 35px;">
+        <h1 style="margin: 0 0 10px; color: #2d3748; font-size: 36px; font-weight: 700;">My Tickets</h1>
+    </div>
+
+    <!-- Tabs Section -->
+    <div style="background: white; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); overflow: hidden;">
+
+        <!-- Tab Headers -->
+        <div style="display: flex; border-bottom: 2px solid #e2e8f0; background: #f7fafc;">
+            <button type="button" onclick="showTab('upcoming')" id="upcomingTab" style="flex: 1; padding: 18px 25px; border:none; cursor:pointer; color: white;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-weight: 600; font-size: 15px;">
+                Upcoming Events
+            </button>
+
+            <button type="button" onclick="showTab('past')" id="pastTab" style="flex: 1; padding: 18px 25px; border:none; cursor:pointer;
+        background: transparent; color: #4a5568;
+        font-weight: 600; font-size: 15px;">
+                Past Events
+            </button>
         </div>
 
-        <!-- Tabs Section -->
-        <div
-            style="background: white; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); overflow: hidden;">
+        <!-- Tab Content - Upcoming Events -->
+        <div style="padding: 30px;">
 
-            <!-- Tab Headers -->
-            <div style="display: flex; border-bottom: 2px solid #e2e8f0; background: #f7fafc;">
-                <a href="#upcoming"
-                    style="flex: 1; padding: 18px 25px; text-align: center; text-decoration: none; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-weight: 600; font-size: 15px; border-bottom: 3px solid #667eea; transition: all 0.3s;">
-                    Upcoming Events
-                </a>
-                <a href="#past"
-                    style="flex: 1; padding: 18px 25px; text-align: center; text-decoration: none; color: #4a5568; background: transparent; font-weight: 600; font-size: 15px; border-bottom: 3px solid transparent; transition: all 0.3s;">
-                    Past Events
-                </a>
-                <a href="#cancelled"
-                    style="flex: 1; padding: 18px 25px; text-align: center; text-decoration: none; color: #4a5568; background: transparent; font-weight: 600; font-size: 15px; border-bottom: 3px solid transparent; transition: all 0.3s;">
-                    Cancelled
-                </a>
+            <!-- Search and Filter Bar -->
+            <div style="display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap;">
+                <input type="text" placeholder="Search by event name..."
+                    style="flex: 1; min-width: 250px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; outline: none;">
+
+                <select name="category"
+                    style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white;">
+                    <option value="">All Categories</option>
+                    <option value="music">🎵 Music</option>
+                    <option value="sports">⚽ Sports</option>
+                    <option value="tech">💻 Technology</option>
+                    <option value="arts">🎨 Arts</option>
+                    <option value="food">🍔 Food</option>
+                    <option value="business">💼 Business</option>
+                </select>
+
+                <select name="sort"
+                    style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white;">
+                    <option value="date">Sort by: Date</option>
+                    <option value="name">Sort by: Name</option>
+                    <option value="location">Sort by: Location</option>
+                </select>
             </div>
 
-            <!-- Tab Content - Upcoming Events -->
-            <div style="padding: 30px;">
+            <!-- Events List -->
+            <div id="upcoming" style="display: flex; flex-direction: column; gap: 20px;">
+                {% if upcoming %}
+                {% for ticket in upcoming %}
+                <!-- Ticket Card Template (for reference) -->
 
-                <!-- Search and Filter Bar -->
-                <div style="display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap;">
-                    <input type="text" placeholder="Search by event name..."
-                        style="flex: 1; min-width: 250px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; outline: none;">
+                <div style="background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 25px; display: flex; gap: 25px; align-items: center; transition: all 0.3s;"
+                    onmouseover="this.style.borderColor='#667eea'" onmouseout="this.style.borderColor='#e2e8f0'">
 
-                    <select name="category"
-                        style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white;">
-                        <option value="">All Categories</option>
-                        <option value="music">🎵 Music</option>
-                        <option value="sports">⚽ Sports</option>
-                        <option value="tech">💻 Technology</option>
-                        <option value="arts">🎨 Arts</option>
-                        <option value="food">🍔 Food</option>
-                        <option value="business">💼 Business</option>
-                    </select>
+                    <!-- Event Image -->
+                    <div
+                        style="flex-shrink: 0; width: 140px; height: 140px; border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden;">
+                        <img src="{{ ticket.event.image }}" alt="{{ ticket.event.title }}"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
 
-                    <select name="sort"
-                        style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white;">
-                        <option value="date">Sort by: Date</option>
-                        <option value="name">Sort by: Name</option>
-                        <option value="location">Sort by: Location</option>
-                    </select>
-                </div>
-                
-                <!-- Events List -->
-                <div id="ticketsList" style="display: flex; flex-direction: column; gap: 20px;">
-                    {% if tickets %}
-                    {% for ticket in tickets %}
-                    <!-- Ticket Card Template (for reference) -->
-
-                    <div style="background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 25px; display: flex; gap: 25px; align-items: center; transition: all 0.3s;"
-                        onmouseover="this.style.borderColor='#667eea'" onmouseout="this.style.borderColor='#e2e8f0'">
-
-                        <!-- Event Image -->
-                        <div
-                            style="flex-shrink: 0; width: 140px; height: 140px; border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden;">
-                            <img src="{{ ticket.event.image }}" alt="{{ ticket.event.title }}"
-                                style="width: 100%; height: 100%; object-fit: cover;">
+                    <!-- Event Details -->
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+                        <div>
+                            <span
+                                style="display: inline-block; background: #edf2f7; color: #667eea; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 8px;">
+                                {{ ticket.event.category }}</span>
+                            <h3 style="margin: 0 0 8px; color: #2d3748; font-size: 20px; font-weight: 700;">
+                                {{ ticket.event.title }}</h3>
                         </div>
 
-                        <!-- Event Details -->
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
-                            <div>
-                                <span
-                                    style="display: inline-block; background: #edf2f7; color: #667eea; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 8px;">
-                                    {{ ticket.event.category }}</span>
-                                <h3 style="margin: 0 0 8px; color: #2d3748; font-size: 20px; font-weight: 700;">
-                                    {{ ticket.event.title }}</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
+                                <span style="font-size: 18px;">📅</span>
+                                <span>{{ ticket.event.date|date:"M d, Y" }} at {{ ticket.event.time }}</span>
                             </div>
-
-                            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                                <div
-                                    style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
-                                    <span style="font-size: 18px;">📅</span>
-                                    <span>{{ ticket.event.date|date:"M d, Y" }} at {{ ticket.event.time }}</span>
-                                </div>
-                                <div
-                                    style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
-                                    <span style="font-size: 18px;">📍</span>
-                                    <span>{{ ticket.event.location }}</span>
-                                </div>
-                                <!-- <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
+                            <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
+                                <span style="font-size: 18px;">📍</span>
+                                <span>{{ ticket.event.location }}</span>
+                            </div>
+                            <!-- <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
                                     <span style="font-size: 18px;">🎟️</span>
                                     <span>Ticket #{{ ticket.ticket_number }}</span>
                                 </div> -->
-                            </div>
+                        </div>
 
-                            <!-- <div style="display: flex; align-items: center; gap: 8px;">
+                        <!-- <div style="display: flex; align-items: center; gap: 8px;">
                                 <span style="background: #d1fae5; color: #065f46; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">✓ Confirmed</span>
                                 {% if ticket.event.date_difference <= 7 %}
                                 <span style="background: #fef3c7; color: #92400e; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">🕒 Starts in {{ ticket.event.date_difference }} days</span>
                                 {% endif %}
                             </div> -->
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div
-                            style="flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; min-width: 140px;">
-                            <a href="#"
-                                style="padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600;">View
-                                Ticket</a>
-                            <a href="{% url 'view_event' ticket.event.id %}"
-                                style="padding: 10px 20px; background: white; color: #4a5568; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">Event
-                                Details</a>
-                        </div>
                     </div>
 
-                    {% endfor %}
-                    {% else %}
+                    <!-- Action Buttons -->
+                    <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; min-width: 140px;">
+                        <a href="{% url 'ticket-qr' ticket.pk %}"
+                            style="padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600;">View
+                            Ticket</a>
+                        <a href="{% url 'view_event' ticket.event.id %}"
+                            style="padding: 10px 20px; background: white; color: #4a5568; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">Event
+                            Details</a>
+                    </div>
+                </div>
 
-                    <!-- Empty State - Show when no tickets -->
+                {% endfor %}
+                {% else %}
+
+                <!-- Empty State - Show when no tickets -->
+                <div style="text-align: center; padding: 80px 20px; border: 2px dashed #cbd5e0; border-radius: 12px;">
+                    <div style="font-size: 80px; margin-bottom: 20px;">🎫</div>
+                    <h3 style="margin: 0 0 12px; color: #2d3748; font-size: 24px; font-weight: 700;">No Upcoming
+                        Events</h3>
+                    <p style="margin: 0 0 25px; color: #718096; font-size: 16px;">You haven't registered for any
+                        upcoming events yet</p>
+                    <a href="#"
+                        style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 15px;">
+                        <span>🔍</span>
+                        <span>Browse Events</span>
+                    </a>
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <div id="past" style="display: none;">
+                {% if past %}
+
+                {% for ticket in past %}
+                <!-- Ticket Card Template (for reference) -->
+
+                <div style="background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 25px; display: flex; gap: 25px; align-items: center; transition: all 0.3s;"
+                    onmouseover="this.style.borderColor='#667eea'" onmouseout="this.style.borderColor='#e2e8f0'">
+
+                    <!-- Event Image -->
                     <div
-                        style="text-align: center; padding: 80px 20px; border: 2px dashed #cbd5e0; border-radius: 12px;">
-                        <div style="font-size: 80px; margin-bottom: 20px;">🎫</div>
-                        <h3 style="margin: 0 0 12px; color: #2d3748; font-size: 24px; font-weight: 700;">No Upcoming
-                            Events</h3>
-                        <p style="margin: 0 0 25px; color: #718096; font-size: 16px;">You haven't registered for any
-                            upcoming events yet</p>
-                        <a href="#"
-                            style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 15px;">
-                            <span>🔍</span>
-                            <span>Browse Events</span>
-                        </a>
+                        style="flex-shrink: 0; width: 140px; height: 140px; border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden;">
+                        <img src="{{ ticket.event.image }}" alt="{{ ticket.event.title }}"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
 
-                    {% endif %}
+                    <!-- Event Details -->
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+                        <div>
+                            <span
+                                style="display: inline-block; background: #edf2f7; color: #667eea; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 8px;">
+                                {{ ticket.event.category }}</span>
+                            <h3 style="margin: 0 0 8px; color: #2d3748; font-size: 20px; font-weight: 700;">
+                                {{ ticket.event.title }}</h3>
+                        </div>
 
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
+                                <span style="font-size: 18px;">📅</span>
+                                <span>{{ ticket.event.date|date:"M d, Y" }} at {{ ticket.event.time }}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
+                                <span style="font-size: 18px;">📍</span>
+                                <span>{{ ticket.event.location }}</span>
+                            </div>
+                            <!-- <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 14px;">
+                                    <span style="font-size: 18px;">🎟️</span>
+                                    <span>Ticket #{{ ticket.ticket_number }}</span>
+                                </div> -->
+                        </div>
+
+                        <!-- <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="background: #d1fae5; color: #065f46; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">✓ Confirmed</span>
+                                {% if ticket.event.date_difference <= 7 %}
+                                <span style="background: #fef3c7; color: #92400e; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">🕒 Starts in {{ ticket.event.date_difference }} days</span>
+                                {% endif %}
+                            </div> -->
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; min-width: 140px;">
+                        <a href="{% url 'ticket-qr' ticket.pk %}"
+                            style="padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600;">View
+                            Ticket</a>
+                        <a href="{% url 'view_event' ticket.event.id %}"
+                            style="padding: 10px 20px; background: white; color: #4a5568; text-align: center; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">Event
+                            Details</a>
+                    </div>
                 </div>
+
+                {% endfor %}
+                {% endif %}
+
             </div>
         </div>
-
-        <!-- Quick Tips Section -->
-        <div
-            style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 16px; padding: 30px; margin-top: 30px; border: 2px solid rgba(102, 126, 234, 0.2);">
-            <h3 style="margin: 0 0 15px; color: #2d3748; font-size: 20px; font-weight: 700;">💡 Quick Tips</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                <div style="display: flex; gap: 12px;">
-                    <span style="color: #667eea; font-size: 20px; flex-shrink: 0;">✓</span>
-                    <div>
-                        <p style="margin: 0 0 4px; color: #2d3748; font-size: 14px; font-weight: 600;">Check your email
-                        </p>
-                        <p style="margin: 0; color: #4a5568; font-size: 13px; line-height: 1.5;">Your ticket
-                            confirmation has been sent to your email</p>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 12px;">
-                    <span style="color: #667eea; font-size: 20px; flex-shrink: 0;">✓</span>
-                    <div>
-                        <p style="margin: 0 0 4px; color: #2d3748; font-size: 14px; font-weight: 600;">Arrive early</p>
-                        <p style="margin: 0; color: #4a5568; font-size: 13px; line-height: 1.5;">Get there 15-30 minutes
-                            before the event starts</p>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 12px;">
-                    <span style="color: #667eea; font-size: 20px; flex-shrink: 0;">✓</span>
-                    <div>
-                        <p style="margin: 0 0 4px; color: #2d3748; font-size: 14px; font-weight: 600;">Bring your ticket
-                        </p>
-                        <p style="margin: 0; color: #4a5568; font-size: 13px; line-height: 1.5;">Show your digital or
-                            printed ticket at the entrance</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Footer -->
-    <footer style="background: #2d3748; color: white; padding: 50px 0; margin-top: 60px;">
-        <div style="max-width: 1400px; margin: 0 auto; padding: 0 40px; text-align: center;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px;">
-                <div
-                    style="background: rgba(255, 255, 255, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                    <span style="font-size: 28px;">🎉</span>
+    <!-- Quick Tips Section -->
+    <div
+        style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 16px; padding: 30px; margin-top: 30px; border: 2px solid rgba(102, 126, 234, 0.2);">
+        <h3 style="margin: 0 0 15px; color: #2d3748; font-size: 20px; font-weight: 700;">💡 Quick Tips</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+            <div style="display: flex; gap: 12px;">
+                <span style="color: #667eea; font-size: 20px; flex-shrink: 0;">✓</span>
+                <div>
+                    <p style="margin: 0 0 4px; color: #2d3748; font-size: 14px; font-weight: 600;">Check your email
+                    </p>
+                    <p style="margin: 0; color: #4a5568; font-size: 13px; line-height: 1.5;">Your ticket
+                        confirmation has been sent to your email</p>
                 </div>
-                <h3 style="margin: 0; font-size: 24px; font-weight: 700;">EventHub</h3>
             </div>
-            <p style="margin: 0 0 20px; color: rgba(255, 255, 255, 0.7); font-size: 14px;">Creating memorable
-                experiences, one event at a time</p>
-            <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 25px;">
-                <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">About</a>
-                <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">Contact</a>
-                <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">Privacy</a>
-                <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">Terms</a>
+            <div style="display: flex; gap: 12px;">
+                <span style="color: #667eea; font-size: 20px; flex-shrink: 0;">✓</span>
+                <div>
+                    <p style="margin: 0 0 4px; color: #2d3748; font-size: 14px; font-weight: 600;">Arrive early</p>
+                    <p style="margin: 0; color: #4a5568; font-size: 13px; line-height: 1.5;">Get there 15-30 minutes
+                        before the event starts</p>
+                </div>
             </div>
-            <p style="margin: 0; color: rgba(255, 255, 255, 0.5); font-size: 13px;">© 2026 EventHub. All rights
-                reserved.</p>
+            <div style="display: flex; gap: 12px;">
+                <span style="color: #667eea; font-size: 20px; flex-shrink: 0;">✓</span>
+                <div>
+                    <p style="margin: 0 0 4px; color: #2d3748; font-size: 14px; font-weight: 600;">Bring your ticket
+                    </p>
+                    <p style="margin: 0; color: #4a5568; font-size: 13px; line-height: 1.5;">Show your digital or
+                        printed ticket at the entrance</p>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer style="background: #2d3748; color: white; padding: 50px 0; margin-top: 60px;">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 40px; text-align: center;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 28px;">🎉</span>
+            </div>
+            <h3 style="margin: 0; font-size: 24px; font-weight: 700;">EventHub</h3>
+        </div>
+        <p style="margin: 0 0 20px; color: rgba(255, 255, 255, 0.7); font-size: 14px;">Creating memorable
+            experiences, one event at a time</p>
+        <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 25px;">
+            <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">About</a>
+            <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">Contact</a>
+            <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">Privacy</a>
+            <a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 14px;">Terms</a>
+        </div>
+        <p style="margin: 0; color: rgba(255, 255, 255, 0.5); font-size: 13px;">© 2026 EventHub. All rights
+            reserved.</p>
+    </div>
+</footer>

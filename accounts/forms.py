@@ -152,5 +152,13 @@ class EditProfileForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter your phone number'
+            }),
+            'city': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your city'
+            }),
+            'state': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your state'
             })
         }

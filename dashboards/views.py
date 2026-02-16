@@ -30,7 +30,7 @@ class UserDashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         registrations = EventRegistration.objects.filter(user=self.request.user).select_related(
-            'event').order_by('created_at')[:3]
+            'event').order_by('event__date')[:3]
         context['activities'] = registrations
         return context
     
@@ -154,7 +154,11 @@ class MyRegisteredEventsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tickets'] = EventRegistration.objects.filter(user=self.request.user).order_by('date')
+        registrations = EventRegistration.objects.select_related('event').filter(
+            user=self.request.user
+        )
+        context['upcoming'] = registrations.filter(event__date__gte=now().date(), user=self.request.user).order_by('event__date')
+        context['past'] = registrations.filter(event__date__lt=now().date(), user=self.request.user)
         return context
     
 
@@ -194,7 +198,7 @@ class TicketQRView(TemplateView):
 class VerifyTicketView(View):
 
     def get(self, request, *args, **kwargs):
-        qr_token = self.kwargs['qr_token']
+        qr_token = self.kwargs['token']
         registration = get_object_or_404(EventRegistration, qr_token=qr_token)
         if registration.event.date < now().date():
             return HttpResponse("This ticket is for an event that has already passed.")
