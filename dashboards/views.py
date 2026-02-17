@@ -11,6 +11,7 @@ from dashboards.forms import CreateEventForm, EditEventForm
 from .models import Event, EventRegistration
 from django.utils.timezone import now
 import csv
+from django.db.models import Count
 
 # Create your views here.
 
@@ -96,6 +97,7 @@ class EditEventView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        context['event'] = event
         context['form'] = EditEventForm(instance=event)
         return context
     
@@ -104,8 +106,8 @@ class EditEventView(TemplateView):
         form = EditEventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
             form.save()
-            return redirect('my_events')
-        return self.render_to_response({'form': form})
+            return redirect('view_event', pk=event.pk)
+        return self.render_to_response({'form': form, 'event': event})
     
 
 class DeleteEventView(LoginRequiredMixin, View):
@@ -128,7 +130,9 @@ class AllEventsView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['events'] = Event.objects.all()
+        events = Event.objects.annotate(attendees_count=Count('registrations'))
+        context['events'] = events
+        # context['attendees_count'] = EventRegistration.objects.annotate(users=Count('user'))
         return context
 
 

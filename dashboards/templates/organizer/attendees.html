@@ -177,13 +177,12 @@
                                 <p style="margin: 0; color: #475569; font-size: 14px;">{{ attendee.user.email }}</p>
                             </td>
                             <td style="padding: 20px 30px;">
-                                <p style="margin: 0; color: #475569; font-size: 14px;">{{ attendee.created_at|date:"M d,
-                                    Y" }}</p>
+                                <p style="margin: 0; color: #475569; font-size: 14px;">{{ attendee.created_at|date:"M d, Y" }}</p>
                             </td>
                             <td style="padding: 20px 30px; text-align: center;">
                                 <span
-                                    style="background: #edf2f7; color: #667eea; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">{{
-                                    attendee.event.title }}</span>
+                                    style="background: #edf2f7; color: #667eea; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                                    {{ attendee.event.title }}</span>
                             </td>
                             <td style="padding: 20px 30px;">
                                 {% if attendee.qr_token %}
