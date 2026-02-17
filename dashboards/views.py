@@ -12,6 +12,7 @@ from .models import Event, EventRegistration
 from django.utils.timezone import now
 import csv
 from django.db.models import Count
+from .mixin import EventFilterMixin
 
 # Create your views here.
 
@@ -58,12 +59,16 @@ class CreateEventView(LoginRequiredMixin, TemplateView):
         return self.render_to_response({'form': form})
 
 
-class MyEventsView(LoginRequiredMixin, TemplateView):
+class MyEventsView(LoginRequiredMixin, EventFilterMixin, TemplateView):
     template_name = 'organizer/my_events.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['events'] = Event.objects.filter(user=self.request.user).order_by('date', 'time')
+        events = Event.objects.filter(user=self.request.user).annotate(
+            attendees=Count('registrations'))
+        events = self.filter_queryset(events)
+        context['events'] = events
+        context['categories'] = Event.Category.choices
         return context
 
 class ViewEvent(LoginRequiredMixin, TemplateView):
@@ -214,9 +219,10 @@ class AttendeesListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        events = Event.objects.filter(user=self.request.user)
-        attendees = EventRegistration.objects.filter(event__in=events)
+        event = get_object_or_404(Event, pk=self.kwargs['pk'], user=self.request.user)
+        attendees = EventRegistration.objects.filter(event=event).select_related('user')
         context['attendees'] = attendees
+        context['event'] = event
         context['total_attendees'] = attendees.count()
         return context
 

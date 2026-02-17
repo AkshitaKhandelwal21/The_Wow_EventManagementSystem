@@ -11,7 +11,7 @@
                     <h1 style="margin: 0 0 8px; color: #2d3748; font-size: 32px; font-weight: 700;">Event Attendees</h1>
                     <p style="margin: 0; color: #718096; font-size: 16px;">{{ event.title }}</p>
                 </div>
-                <a href="#"
+                <a href="{% url 'view_event' event.pk %}"
                     style="padding: 10px 20px; background: white; color: #4a5568; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0;">←
                     Back to Event</a>
             </div>
