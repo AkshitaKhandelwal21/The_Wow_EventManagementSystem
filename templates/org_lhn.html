@@ -1,0 +1,47 @@
+<div
+    style="position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); z-index: 100;">
+
+    <!-- Logo -->
+    <div style="padding: 30px 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.2); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 24px;">🎉</span>
+            </div>
+            <div>
+                <h2 style="margin: 0; color: white; font-size: 20px; font-weight: 700;">The Wow</h2>
+                <p style="margin: 0; color: rgba(255, 255, 255, 0.8); font-size: 12px;">Organizer Portal</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Left Hand Navigation -->
+    <nav style="padding: 20px 0;">
+        <a href="{% url 'org-dashboard' %}"
+            style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+            <span style="font-size: 20px;">📊</span>
+            <span style="font-weight: 600; font-size: 15px;">Dashboard</span>
+        </a>
+        <a href="{% url 'my_events' %}"
+            style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+            <span style="font-size: 20px;">🎫</span>
+            <span style="font-weight: 600; font-size: 15px;">My Events</span>
+        </a>
+        <a href="#"
+            style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+            <span style="font-size: 20px;">💰</span>
+            <span style="font-weight: 600; font-size: 15px;">Revenue</span>
+        </a>
+        <a href="{% url 'analytics' %}"
+            style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+            <span style="font-size: 20px;">📈</span>
+            <span style="font-weight: 600; font-size: 15px;">Analytics</span>
+        </a>
+        <a href="#"
+            style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
+            <span style="font-size: 20px;">⚙️</span>
+            <span style="font-weight: 600; font-size: 15px;">Settings</span>
+        </a>
+    </nav>
+
+</div>

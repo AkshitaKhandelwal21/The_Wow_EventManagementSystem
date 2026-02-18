@@ -9,3 +9,5 @@ celery
 redis
 django-celery-beat 
 django-celery-results
+dotenv
+qrcode[pil]

@@ -25,9 +25,11 @@
 
             <!-- Right Menu -->
             <div style="display: flex; align-items: center; gap: 25px;">
-                <a href="{% url 'all_events' %}" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Browse
+                <a href="{% url 'all_events' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Browse
                     Events</a>
-                <a href="{% url 'reg-events' %}" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
+                <a href="{% url 'reg-events' %}"
+                    style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
                     Tickets</a>
                 <a href="{% url 'user-dashboard' %}"
                     style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Dashboard</a>
@@ -95,7 +97,7 @@
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px; color: white;">
                     <span style="font-size: 24px;">📍</span>
-                    <span style="font-size: 16px; font-weight: 500;">{{event.venue}}</span>
+                    <span style="font-size: 16px; font-weight: 500;">{{event.location}}</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px; color: white;">
                     <span style="font-size: 24px;">👥</span>
@@ -155,10 +157,11 @@
                                     Venue</p>
                                 <p style="margin: 0; color: #2d3748; font-size: 16px; font-weight: 600;">{{event.venue}}
                                 </p>
-                                {% if event.address %}
-                                <p style="margin: 5px 0 0; color: #4a5568; font-size: 14px;">FULL_ADDRESS</p>
+                                {% if event.venue %}
+                                <p style="margin: 5px 0 0; color: #4a5568; font-size: 14px;">{{event.location}}</p>
                                 {% endif %}
-                                <a href="https://www.google.com/maps/dir/?api=1&destination={{ event.address|urlencode }}" target="_blank"
+                                <a href="https://www.google.com/maps/dir/?api=1&destination={{ event.venue|urlencode }}"
+                                    target="_blank"
                                     style="text-decoration: none; display: inline-block; margin-top: 8px; color: #667eea; font-size: 14px; font-weight: 600; text-decoration: none;">View
                                     on Map →</a>
                             </div>
@@ -209,9 +212,9 @@
             </div>
 
             <!-- Right Column - Ticket/Registration Card -->
-             {% if not is_reg %}
+            {% if request.user.role == "user" %}
+            {% if not is_reg %}
             <div>
-
                 <!-- Sticky Registration Card -->
                 <div style="position: sticky; top: 90px;">
 
@@ -220,14 +223,20 @@
                         style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border: 2px solid #e2e8f0; margin-bottom: 25px;">
 
                         <!-- Price -->
+                         {% if event.price %}
                         <div style="margin-bottom: 25px; text-align: center;">
                             <p style="margin: 0 0 5px; color: #718096; font-size: 14px; font-weight: 600;">Ticket Price
                             </p>
-                            <p style="margin: 0; color: #2d3748; font-size: 42px; font-weight: 700;">$PRICE</p>
+                            <p style="margin: 0; color: #2d3748; font-size: 42px; font-weight: 700;">Rs. {{event.price}}</p>
                             <p style="margin: 8px 0 0; color: #718096; font-size: 13px;">Per person</p>
                         </div>
+                        {% else %}
+                        <div style="margin-bottom: 25px; text-align: center;">
+                            <p style="margin: 0; color: #2d3748; font-size: 42px; font-weight: 700;">Entry Free</p>                        </div>
+                        {% endif %}
 
                         <!-- Availability -->
+                         {% if event.seats %}
                         <div
                             style="background: #f7fafc; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
                             <p style="margin: 0 0 8px; color: #4a5568; font-size: 14px; font-weight: 600;">
@@ -235,6 +244,7 @@
                             <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
                             </div>
                         </div>
+                        {% endif %}
 
                         <!-- Register Button -->
                         <form action="{% url 'user-register' event.pk %}" method="POST">
@@ -277,6 +287,15 @@
 
                 </div>
             </div>
+            {% else %}
+            <div style="position: sticky; top: 90px;">
+                <h3 style="text-align: center;">Your Ticket QR</h3>
+                <img src="{% url 'qr-image' registration.qr_token %}" alt="QR Code"
+                style="width: 200px; height: 200px; display: block; margin: 20px auto;">
+                <p style="text-align: center;">Scan this at the event entry.</p>
+
+            </div>
+            {% endif %}
             {% endif %}
         </div>
     </div>
@@ -290,17 +309,13 @@
             <!-- Similar Events Grid - Will be populated by backend -->
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
 
+                {% for eve in similar_events %}
                 <!-- Placeholder cards (remove when integrating with backend) -->
                 <div
                     style="background: #f7fafc; border: 2px dashed #cbd5e0; border-radius: 16px; height: 350px; display: flex; align-items: center; justify-content: center; color: #a0aec0; font-size: 14px;">
-                    Similar Event Card 1</div>
-                <div
-                    style="background: #f7fafc; border: 2px dashed #cbd5e0; border-radius: 16px; height: 350px; display: flex; align-items: center; justify-content: center; color: #a0aec0; font-size: 14px;">
-                    Similar Event Card 2</div>
-                <div
-                    style="background: #f7fafc; border: 2px dashed #cbd5e0; border-radius: 16px; height: 350px; display: flex; align-items: center; justify-content: center; color: #a0aec0; font-size: 14px;">
-                    Similar Event Card 3</div>
+                    {{eve.title}}</div>
 
+                {% endfor %}
             </div>
         </div>
     </div>

@@ -4,7 +4,7 @@ from .models import Event, EventRegistration
 class CreateEventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'description', 'category', 'duration', 'seats', 'venue', 'date', 'time', 'address', 'image']
+        fields = ['title', 'description', 'category', 'duration', 'seats', 'location', 'date', 'time', 'venue', 'image']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -14,7 +14,7 @@ class CreateEventForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Tell us more'
             }),
-            'venue': forms.TextInput(attrs={
+            'location': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Where is the event'
             }),
@@ -32,9 +32,9 @@ class CreateEventForm(forms.ModelForm):
             'seats': forms.NumberInput(attrs={
                 'class': 'form-control'
             }),
-            'address': forms.TextInput(attrs={
+            'venue': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter the address'
+                'placeholder': 'Enter the venue'
             }),
             'category': forms.Select(attrs={
                 'class': 'form-control'
@@ -45,7 +45,7 @@ class CreateEventForm(forms.ModelForm):
 class EditEventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'description', 'category', 'venue', 'date', 'time', 'image']
+        fields = ['title', 'description', 'category', 'location', 'date', 'time', 'venue', 'image']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',

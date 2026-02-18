@@ -12,10 +12,10 @@ class EventAdmin(admin.ModelAdmin):
     ]
     fieldsets = [
         ("Event Info", {'fields': [
-            'title', 'description', 'category', 'venue', 'image'
+            'title', 'description', 'category', 'location', 'image'
         ]}),
         ("Events Metadata", {'fields': [
-            'date', 'time', 'address', 'duration', 'seats'
+            'date', 'time', 'venue', 'duration', 'seats'
         ]}),
         ("Creation Info", {'fields': [
             'user', 'created_at', 'updated_at'

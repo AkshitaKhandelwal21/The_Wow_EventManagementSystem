@@ -1,66 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizer Dashboard: The-Wow</title>
-</head>
-
-<body
-    style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f7fafc; min-height: 100vh;">
-
+{% include 'org_header.html' %}
     <!-- Sidebar -->
-    <div
-        style="position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); z-index: 100;">
-
-        <!-- Logo -->
-        <div style="padding: 30px 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div
-                    style="background: rgba(255, 255, 255, 0.2); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                    <span style="font-size: 24px;">🎉</span>
-                </div>
-                <div>
-                    <h2 style="margin: 0; color: white; font-size: 20px; font-weight: 700;">EventHub</h2>
-                    <p style="margin: 0; color: rgba(255, 255, 255, 0.8); font-size: 12px;">Organizer Portal</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation -->
-        <nav style="padding: 20px 0;">
-            <a href="#"
-                style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: white; text-decoration: none; background: rgba(255, 255, 255, 0.2); border-left: 4px solid white; transition: all 0.3s;">
-                <span style="font-size: 20px;">📊</span>
-                <span style="font-weight: 600; font-size: 15px;">Dashboard</span>
-            </a>
-            <a href="{% url 'my_events' %}"
-                style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
-                <span style="font-size: 20px;">🎫</span>
-                <span style="font-weight: 600; font-size: 15px;">My Events</span>
-            </a>
-            <a href="#"
-                style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
-                <span style="font-size: 20px;">👥</span>
-                <span style="font-weight: 600; font-size: 15px;">Attendees</span>
-            </a>
-            <a href="#"
-                style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
-                <span style="font-size: 20px;">💰</span>
-                <span style="font-weight: 600; font-size: 15px;">Revenue</span>
-            </a>
-            <a href="#"
-                style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
-                <span style="font-size: 20px;">📈</span>
-                <span style="font-weight: 600; font-size: 15px;">Analytics</span>
-            </a>
-            <a href="#"
-                style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
-                <span style="font-size: 20px;">⚙️</span>
-                <span style="font-weight: 600; font-size: 15px;">Settings</span>
-            </a>
-        </nav>
+    
+    {% include 'org_lhn.html' %}
 
         <!-- User Profile -->
         <div
@@ -114,7 +55,7 @@
                     <span
                         style="background: #10b981; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">+12%</span>
                 </div>
-                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 28px; font-weight: 700;">24</h3>
+                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 28px; font-weight: 700;">{{ total_events }}</h3>
                 <p style="margin: 0; color: #718096; font-size: 14px; font-weight: 500;">Total Events</p>
             </div>
 
@@ -128,7 +69,7 @@
                     <span
                         style="background: #10b981; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">+24%</span>
                 </div>
-                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 28px; font-weight: 700;">1,847</h3>
+                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 28px; font-weight: 700;">{{ total_attendees }}</h3>
                 <p style="margin: 0; color: #718096; font-size: 14px; font-weight: 500;">Total Attendees</p>
             </div>
 
@@ -142,12 +83,12 @@
                     <span
                         style="background: #10b981; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">+18%</span>
                 </div>
-                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 28px; font-weight: 700;">$32,450</h3>
+                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 28px; font-weight: 700;">Rs. {{total_revenue }}</h3>
                 <p style="margin: 0; color: #718096; font-size: 14px; font-weight: 500;">Total Revenue</p>
             </div>
 
             <!-- Card 4 -->
-            <div
+            <div 
                 style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
                     <div
@@ -156,7 +97,7 @@
                     <span
                         style="background: #f59e0b; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">-3%</span>
                 </div>
-                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 28px; font-weight: 700;">4.8</h3>
+                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 28px; font-weight: 700;">{{rating}}</h3>
                 <p style="margin: 0; color: #718096; font-size: 14px; font-weight: 500;">Avg. Rating</p>
             </div>
         </div>

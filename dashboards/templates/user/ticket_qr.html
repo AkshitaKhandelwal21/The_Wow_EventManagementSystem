@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Ticket - EventHub</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 20px; box-sizing: border-box;">
+    
+    <!-- Back Button -->
+    <div style="max-width: 800px; margin: 0 auto 20px;">
+        <a href="{% url 'reg-events' %}" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); color: white; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; transition: all 0.3s;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to My Tickets
+        </a>
+    </div>
+
+    <!-- Ticket Container -->
+    <div style="max-width: 800px; margin: 0 auto; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+        
+       <!-- QR Code Section -->
+            <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); border-radius: 16px; padding: 40px; text-align: center; border: 2px dashed #667eea; margin-bottom: 30px;">
+                <h2 style="margin: 0 0 10px; color: #2d3748; font-size: 24px; font-weight: 700;">Your QR Code</h2>
+                <p style="margin: 0 0 25px; color: #64748b; font-size: 15px;">Present this QR code at the event entrance</p>
+                
+                <!-- QR Code -->
+                <div style="display: inline-block; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
+                    <img src="{% url 'qr-image' registration.qr_token %}" alt="Ticket QR Code" style="width: 250px; height: 250px; display: block;">
+                </div>
+                
+                <p style="margin: 0; color: #475569; font-size: 13px; line-height: 1.6;">
+                    <strong>Note:</strong> This QR code is unique to your ticket. Please do not share it with others.
+                </p>
+            </div>
+
+        <!-- Ticket Details Section -->
+        <div style="padding: 40px;">
+            
+            <!-- Ticket Info Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 35px;">
+                
+                <!-- Date & Time -->
+                <div style="background: #f8fafc; border-radius: 12px; padding: 20px; border-left: 4px solid #667eea;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;">📅</div>
+                        <div>
+                            <p style="margin: 0; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase;">Date & Time</p>
+                        </div>
+                    </div>
+                    <p style="margin: 0; color: #1e293b; font-size: 16px; font-weight: 700;">{{ registration.event.date|date:"l, F d, Y" }}</p>
+                    <p style="margin: 4px 0 0; color: #475569; font-size: 15px;">{{ registration.event.time }}</p>
+                </div>
+
+                <!-- Location -->
+                <div style="background: #f8fafc; border-radius: 12px; padding: 20px; border-left: 4px solid #667eea;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;">📍</div>
+                        <div>
+                            <p style="margin: 0; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase;">Location</p>
+                        </div>
+                    </div>
+                    <p style="margin: 0; color: #1e293b; font-size: 16px; font-weight: 700;">{{ registration.event.location }}</p>
+                    <p style="margin: 4px 0 0; color: #475569; font-size: 14px;">{{ registration.event.venue }}</p>
+                </div>
+
+                
+            </div>
+
+            
+            <!-- Important Information -->
+            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                <div style="display: flex; gap: 15px;">
+                    <span style="font-size: 24px; flex-shrink: 0;">💡</span>
+                    <div>
+                        <p style="margin: 0 0 8px; color: #92400e; font-size: 14px; font-weight: 700;">Important Information</p>
+                        <ul style="margin: 0; padding-left: 20px; color: #b45309; font-size: 13px; line-height: 1.8;">
+                            <li>Please arrive at least 30 minutes before the event starts</li>
+                            <li>This ticket is non-transferable and non-refundable</li>
+                            <li>Entry is subject to security checks</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                <button style="padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                    <span style="font-size: 18px;">📥</span>
+                    <span>Download Ticket</span>
+                </button>
+                <button style="padding: 16px; background: white; color: #4a5568; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <span style="font-size: 18px;">📧</span>
+                    <span>Email Ticket</span>
+                </button>
+            </div>
+
+            <!-- Additional Links -->
+            <div style="text-align: center; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                <div style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap;">
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">View Event Details</a>
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">Add to Calendar</a>
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">Contact Organizer</a>
+                    <a href="#" style="color: #dc2626; text-decoration: none; font-size: 14px; font-weight: 600;">Cancel Ticket</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticket Footer -->
+        <div style="background: #f8fafc; padding: 25px 40px; border-top: 2px solid #e2e8f0; text-align: center;">
+            <p style="margin: 0 0 8px; color: #2d3748; font-size: 13px; font-weight: 600;">Need help?</p>
+            <div style="display: flex; justify-content: center; gap: 20px;">
+                <a href="#" style="color: #667eea; text-decoration: none; font-size: 13px; font-weight: 600;">support@eventhub.com</a>
+                <span style="color: #cbd5e0;">•</span>
+                <a href="#" style="color: #667eea; text-decoration: none; font-size: 13px; font-weight: 600;">+1 (555) 123-4567</a>
+            </div>
+            <p style="margin: 15px 0 0; color: #94a3b8; font-size: 12px;">Ticket ID: {{ ticket.id }} • Issued: {{ ticket.created_at|date:"M d, Y" }}</p>
+        </div>
+    </div>
+
+    <!-- Print Styles -->
+    <style>
+        @media print {
+            body {
+                background: white !important;
+                padding: 20px !important;
+            }
+            a[href^="#"] {
+                display: none !important;
+            }
+        }
+    </style>
+
+</body>
+</html>

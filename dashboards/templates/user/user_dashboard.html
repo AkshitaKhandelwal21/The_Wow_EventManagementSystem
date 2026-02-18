@@ -59,7 +59,7 @@
                                     </div>
                                 </div>
                                 <div style="display: flex; gap: 10px;">
-                                    <a href="#" style="padding: 8px 16px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 600;">View Ticket</a>
+                                    <a href="{% url 'ticket-qr' act.pk %}" style="padding: 8px 16px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 600;">View Ticket</a>
                                     <a href="{% url 'view_event' act.event.pk %}" style="padding: 8px 16px; background: white; color: #4a5568; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 600; border: 2px solid #e2e8f0;">Event Details</a>
                                 </div>
                             </div>
