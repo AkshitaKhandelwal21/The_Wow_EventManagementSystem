@@ -18,7 +18,7 @@
     <!-- Left Hand Navigation -->
     <nav style="padding: 20px 0;">
         <a href="{% url 'org-dashboard' %}"
-            style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: white; text-decoration: none; background: rgba(255, 255, 255, 0.2); border-left: 4px solid white; transition: all 0.3s;">
+            style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
             <span style="font-size: 20px;">📊</span>
             <span style="font-weight: 600; font-size: 15px;">Dashboard</span>
         </a>
@@ -32,7 +32,7 @@
             <span style="font-size: 20px;">💰</span>
             <span style="font-weight: 600; font-size: 15px;">Revenue</span>
         </a>
-        <a href="#"
+        <a href="{% url 'analytics' %}"
             style="display: flex; align-items: center; gap: 12px; padding: 14px 25px; color: rgba(255, 255, 255, 0.9); text-decoration: none; border-left: 4px solid transparent; transition: all 0.3s;">
             <span style="font-size: 20px;">📈</span>
             <span style="font-weight: 600; font-size: 15px;">Analytics</span>
@@ -43,3 +43,5 @@
             <span style="font-weight: 600; font-size: 15px;">Settings</span>
         </a>
     </nav>
+
+</div>

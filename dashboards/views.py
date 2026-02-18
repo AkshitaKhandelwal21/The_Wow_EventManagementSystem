@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 import qrcode
 from dashboards.forms import CreateEventForm, EditEventForm
+from dashboards.services import get_monthly_registration_data, get_top_events
 from .models import Event, EventRegistration
 from django.utils.timezone import now
 import csv
@@ -16,16 +17,9 @@ from .mixin import EventFilterMixin
 
 # Create your views here.
 
-class OrganizerDashboardView(TemplateView):
-    template_name = 'organizer/organizer_dashboard.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['total_events'] = Event.objects.filter(user=self.request.user).count()
-        context['total_attendees'] = EventRegistration.objects.filter(
-            event__user=self.request.user).count()
-        return context
-    
+# ****************************** User Views ***********************************
+
 class UserDashboardView(TemplateView):
     template_name = "user/user_dashboard.html"
 
@@ -36,40 +30,6 @@ class UserDashboardView(TemplateView):
         context['activities'] = registrations
         return context
     
-
-class AdmindashboardView(TemplateView):
-    template_name = "admin/admin_dashboard.html"
-
-
-class CreateEventView(LoginRequiredMixin, TemplateView):
-    template_name = 'organizer/newEvent.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = CreateEventForm()
-        return context
-    
-    def post(self, request, *args, **kwargs):
-        form = CreateEventForm(request.POST, request.FILES)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.user = request.user
-            event.save()
-            return redirect('org-dashboard')
-        return self.render_to_response({'form': form})
-
-
-class MyEventsView(LoginRequiredMixin, EventFilterMixin, TemplateView):
-    template_name = 'organizer/my_events.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        events = Event.objects.filter(user=self.request.user).annotate(
-            attendees=Count('registrations'))
-        events = self.filter_queryset(events)
-        context['events'] = events
-        context['categories'] = Event.Category.choices
-        return context
 
 class ViewEvent(LoginRequiredMixin, TemplateView):
     template_name = 'organizer/view_event.html'
@@ -96,40 +56,6 @@ class ViewEvent(LoginRequiredMixin, TemplateView):
         return context
     
 
-class EditEventView(TemplateView):
-    template_name = 'organizer/editEvent.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        event = get_object_or_404(Event, pk=self.kwargs['pk'])
-        context['event'] = event
-        context['form'] = EditEventForm(instance=event)
-        return context
-    
-    def post(self, request, *args, **kwargs):
-        event = get_object_or_404(Event, pk=self.kwargs['pk'])
-        form = EditEventForm(request.POST, request.FILES, instance=event)
-        if form.is_valid():
-            form.save()
-            return redirect('view_event', pk=event.pk)
-        return self.render_to_response({'form': form, 'event': event})
-    
-
-class DeleteEventView(LoginRequiredMixin, View):
-    model = Event
-    success_url = reverse_lazy('my_events')
-    
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['event'] = get_object_or_404(Event, pk=self.kwargs['pk'])
-    #     return context
-
-    def post(self, request, *args, **kwargs):
-        event = get_object_or_404(Event, pk=self.kwargs['pk'])
-        event.delete()
-        return redirect('my_events')
-    
-
 class AllEventsView(TemplateView):
     template_name = 'user/all_events.html'
     
@@ -137,8 +63,8 @@ class AllEventsView(TemplateView):
         context = super().get_context_data(**kwargs)
         events = Event.objects.annotate(attendees_count=Count('registrations'))
         context['events'] = events
-        # context['attendees_count'] = EventRegistration.objects.annotate(users=Count('user'))
         return context
+    
 
 
 class UserRegisterView(TemplateView):
@@ -155,7 +81,6 @@ class UserRegisterView(TemplateView):
                 event.save(update_fields=['seats'])
 
         return redirect('view_event', pk=event.pk)   
-    # Redirect to registered events page
 
 
 class MyRegisteredEventsView(TemplateView):
@@ -214,6 +139,79 @@ class VerifyTicketView(View):
         return HttpResponse(f"Ticket for {registration.event.title} is valid for user {registration.user.username}")
     
 
+
+#  ****************************** Organizer Views ***********************************
+class OrganizerDashboardView(TemplateView):
+    template_name = 'organizer/organizer_dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_events'] = Event.objects.filter(user=self.request.user).count()
+        context['total_attendees'] = EventRegistration.objects.filter(
+            event__user=self.request.user).count()
+        return context
+    
+
+class CreateEventView(LoginRequiredMixin, TemplateView):
+    template_name = 'organizer/newEvent.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CreateEventForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = CreateEventForm(request.POST, request.FILES)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.user = request.user
+            event.save()
+            return redirect('org-dashboard')
+        return self.render_to_response({'form': form})
+
+
+class MyEventsView(LoginRequiredMixin, EventFilterMixin, TemplateView):
+    template_name = 'organizer/my_events.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        events = Event.objects.filter(user=self.request.user).annotate(
+            attendees=Count('registrations'))
+        events = self.filter_queryset(events)
+        context['events'] = events
+        context['categories'] = Event.Category.choices
+        return context
+    
+
+class EditEventView(TemplateView):
+    template_name = 'organizer/editEvent.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        context['event'] = event
+        context['form'] = EditEventForm(instance=event)
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        form = EditEventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            form.save()
+            return redirect('view_event', pk=event.pk)
+        return self.render_to_response({'form': form, 'event': event})
+    
+
+class DeleteEventView(LoginRequiredMixin, View):
+    model = Event
+    success_url = reverse_lazy('my_events')
+
+    def post(self, request, *args, **kwargs):
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        event.delete()
+        return redirect('my_events')
+    
+
 class AttendeesListView(TemplateView):
     template_name = 'organizer/attendees.html'
 
@@ -225,7 +223,6 @@ class AttendeesListView(TemplateView):
         context['event'] = event
         context['total_attendees'] = attendees.count()
         return context
-
 
 class ExportAttendeesCSVView(View):
     def get(self, request, *args, **kwargs):
@@ -244,3 +241,23 @@ class ExportAttendeesCSVView(View):
                 ])
 
         return response
+
+
+class AnalyticsView(TemplateView):
+    template_name = 'organizer/analytics.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_events'] = Event.objects.filter(user=self.request.user).count()
+        context['total_attendees'] = EventRegistration.objects.filter(
+            event__user=self.request.user).count()
+        context['monthly_data'] = get_monthly_registration_data(self.request.user)
+        context['top_events'] = get_top_events(self.request.user)
+        context['recent_registrations'] = EventRegistration.objects.all().order_by('-created_at')[:5]
+        return context
+    
+
+# ****************************** Admin Views ***********************************
+
+class AdmindashboardView(TemplateView):
+    template_name = "admin/admin_dashboard.html"
