@@ -90,7 +90,7 @@ class SendEmailVerificationView(TemplateView):
 
         token_obj = EmailVerificationToken.objects.select_related('user').filter(
             token=token, 
-            is_blacklisted=False
+            is_blacklisted=False, expires_at__gt=timezone.now()
         ).first()
 
         if not token_obj:
@@ -102,6 +102,9 @@ class SendEmailVerificationView(TemplateView):
             user.email_verified = True
             user.save()
             
+        token_obj.is_blacklisted = True
+        token_obj.save()
+
         return redirect('login')   
 
 
@@ -243,24 +246,27 @@ class ResetPasswordView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         token = self.kwargs['token']
+
+        self.token_obj = PasswordVerificationToken.objects.select_related('user').filter(
+            token=token, is_blacklisted=False, expires_at__gte=timezone.now()
+        ).first()
+        if not self.token_obj:
+            return redirect(self.request, self.template_name)
+        
         context['form'] = ResetPasswordForm()
         context['token'] = token
         return context
 
     def post(self, request, *args, **kwargs):
         form = ResetPasswordForm(request.POST)
-        token = self.kwargs['token']
-        token_obj = PasswordVerificationToken.objects.select_related('user').filter(
-            token=token, is_blacklisted=False
-        ).first()
 
         if form.is_valid():
-            user = token_obj.user
+            user = self.token_obj.user
             password = form.cleaned_data['password1']
             user.set_password(password)
             user.save()
-            token_obj.is_blacklisted = True
-            token_obj.save()
+            self.token_obj.is_blacklisted = True
+            self.token_obj.save()
 
             return redirect('login')
         return self.render_to_response({'form': form})
