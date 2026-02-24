@@ -218,10 +218,10 @@
                         <tr style="background: #f8fafc;">
                             <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Attendee</th>
                             <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Event</th>
-                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Ticket</th>
+                            <!-- <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Ticket</th> -->
                             <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Date</th>
                             <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Amount</th>
-                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Status</th>
+                            <!-- <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Status</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -239,16 +239,16 @@
                             <td style="padding: 18px 30px;">
                                 <p style="margin: 0; color: #2d3748; font-size: 14px; font-weight: 500; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ reg.event.title }}</p>
                             </td>
-                            <td style="padding: 18px 30px;">
+                            <!-- <td style="padding: 18px 30px;">
                                 <span style="background: #edf2f7; color: #667eea; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">{{ reg.ticket_type }}</span>
-                            </td>
+                            </td> -->
                             <td style="padding: 18px 30px;">
                                 <p style="margin: 0; color: #475569; font-size: 14px;">{{ reg.created_at|date:"M d, Y" }}</p>
                             </td>
                             <td style="padding: 18px 30px;">
                                 <p style="margin: 0; color: #2d3748; font-size: 14px; font-weight: 600;">Rs. {{ reg.amount }}</p>
                             </td>
-                            <td style="padding: 18px 30px;">
+                            <!-- <td style="padding: 18px 30px;">
                                 {% if reg.status == 'confirmed' %}
                                 <span style="background: #d1fae5; color: #065f46; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">✓ Confirmed</span>
                                 {% elif reg.status == 'pending' %}
@@ -256,7 +256,7 @@
                                 {% else %}
                                 <span style="background: #fee2e2; color: #991b1b; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">✕ Cancelled</span>
                                 {% endif %}
-                            </td>
+                            </td> -->
                         </tr>
                         {% empty %}
                         <tr>

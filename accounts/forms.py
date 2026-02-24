@@ -150,6 +150,7 @@ class EditProfileForm(forms.ModelForm):
                 'placeholder': 'Enter your sweet name'
             }),
             'phone': forms.TextInput(attrs={
+                'id': 'phone',
                 'class': 'form-control',
                 'placeholder': 'Enter your phone number'
             }),

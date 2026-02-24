@@ -1,4 +1,4 @@
-{% include 'user_header.html' %}
+    {% include 'user_header.html' %}
 
     <!-- Hero Search Section -->
     <div
@@ -17,7 +17,8 @@
                 attend events that match your interests</p>
 
             <!-- Search Bar -->
-            <div style="max-width: 800px; margin: 0 auto; display: flex; gap: 12px;">
+            <form action="">
+                <div style="max-width: 800px; margin: 0 auto; display: flex; gap: 12px;">
                 <div style="flex: 1; position: relative;">
                     <input type="text" name="search" placeholder="Search events by name, location, or keyword..."
                         style="width: 100%; padding: 16px 20px 16px 50px; border: none; border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
@@ -27,6 +28,7 @@
                 <button type="submit"
                     style="padding: 16px 32px; background: white; color: #667eea; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); transition: all 0.3s;">Search</button>
             </div>
+            </form>
         </div>
     </div>
 
@@ -47,38 +49,30 @@
             <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
 
                 <!-- Category Filter -->
-                <select name="category"
+                <form method="get">
+                    <select name="category" onchange="this.form.submit()" 
                     style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
-                    <option value="">All Categories</option>
-                    <option value="music">🎵 Music & Concerts</option>
-                    <option value="sports">⚽ Sports & Fitness</option>
-                    <option value="tech">💻 Technology</option>
-                    <option value="arts">🎨 Arts & Culture</option>
-                    <option value="food">🍔 Food & Dining</option>
-                    <option value="business">💼 Business</option>
-                    <option value="education">📚 Education</option>
-                    <option value="entertainment">🎭 Entertainment</option>
-                </select>
+                        <option value="">All Category</option>
+                        {% for key, value in events.model.Category.choices %}
+                        <option value="{{ key }}" {% if request.GET.category == key %}selected{% endif %}>
+                            {{ value }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </form>
 
-                <!-- Date Filter -->
-                <select name="date"
+                <form action="" method="get">
+                    <!-- Date Filter -->
+                <select name="date" onchange="this.form.submit()"
                     style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
-                    <option value="">Any Date</option>
-                    <option value="today">Today</option>
-                    <option value="tomorrow">Tomorrow</option>
-                    <option value="this-week">This Week</option>
-                    <option value="this-month">This Month</option>
-                    <option value="custom">Custom Date Range</option>
+                    {% for key, value in date_choices %}
+                    <option value="{{ key }}" {% if request.GET.date == key %}selected{% endif %}>
+                        {{ value }}
+                    </option>
+                    {% endfor %}
                 </select>
-
-                <!-- Event Type Filter -->
-                <select name="type"
-                    style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
-                    <option value="">All Types</option>
-                    <option value="in-person">📍 In-Person</option>
-                    <option value="online">🌐 Online</option>
-                    <option value="hybrid">🔄 Hybrid</option>
-                </select>
+                </form>
+            
 
                 <!-- Price Filter -->
                 <select name="price"
@@ -92,7 +86,8 @@
                 </select>
 
                 <!-- Sort By -->
-                <select name="sort"
+                 <form action="" onchange="this.form.submit()">
+                    <select name="sort"
                     style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
                     <option value="date">Sort by: Date</option>
                     <option value="popular">Sort by: Popularity</option>
@@ -100,9 +95,11 @@
                     <option value="price-high">Sort by: Price (High to Low)</option>
                     <option value="newest">Sort by: Newest First</option>
                 </select>
+                 </form>
+                
 
                 <!-- Clear Filters Button -->
-                <a href="#"
+                <a href="{% url 'all_events' %}"
                     style="padding: 10px 16px; background: #f7fafc; color: #4a5568; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; border: 2px solid #e2e8f0; margin-left: auto;">Clear
                     Filters</a>
             </div>
@@ -169,16 +166,16 @@
 
             <!-- Empty State - Show when no events match filters -->
             <!-- <div
-                style="grid-column: 1 / -1; text-align: center; padding: 80px 20px; background: white; border-radius: 16px; border: 2px dashed #cbd5e0;">
-                <div style="font-size: 80px; margin-bottom: 20px;">🔍</div>
-                <h3 style="margin: 0 0 12px; color: #2d3748; font-size: 24px; font-weight: 700;">No Events Found</h3>
-                <p style="margin: 0 0 25px; color: #718096; font-size: 16px;">Try adjusting your filters or search
-                    criteria</p>
-                <a href="#"
-                    style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 15px;">
-                    Clear All Filters
-                </a>
-            </div> -->
+                    style="grid-column: 1 / -1; text-align: center; padding: 80px 20px; background: white; border-radius: 16px; border: 2px dashed #cbd5e0;">
+                    <div style="font-size: 80px; margin-bottom: 20px;">🔍</div>
+                    <h3 style="margin: 0 0 12px; color: #2d3748; font-size: 24px; font-weight: 700;">No Events Found</h3>
+                    <p style="margin: 0 0 25px; color: #718096; font-size: 16px;">Try adjusting your filters or search
+                        criteria</p>
+                    <a href="#"
+                        style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 15px;">
+                        Clear All Filters
+                    </a>
+                </div> -->
 
         </div>
 
