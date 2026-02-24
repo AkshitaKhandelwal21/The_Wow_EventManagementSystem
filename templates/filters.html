@@ -3,24 +3,39 @@
     style="background: white; border-radius: 16px; padding: 25px 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
     <!-- Filters content remains the same -->
     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-        <select
+
+       <form action="" method="get">
+         <select onchange="this.form.submit()" name="category"
             style="padding: 12px 18px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
-            {% for value, label in categories %}
-            <option value="{{ value }}">{{ label }}</option>
+            <option value="">All Category</option>
+            {% for value, label in events.model.Category.choices %}
+            <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>
+                {{label}}</option>
             {% endfor %}
         </select>
-        <select
+       </form>
+
+        <select onchange="this.form.submit()"
             style="padding: 12px 18px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
             <option>Sort by: Latest</option>
             <option>Sort by: Date</option>
             <option>Sort by: Name</option>
             <option>Sort by: Attendees</option>
         </select>
+        
     </div>
-    <div style="position: relative; flex: 1; min-width: 250px; max-width: 400px;">
-        <input type="text" placeholder="Search events..."
-            style="width: 100%; padding: 12px 18px 12px 45px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; box-sizing: border-box;">
-        <span
-            style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #a0aec0; font-size: 18px;">🔍</span>
-    </div>
+     <!-- Search Bar -->
+            <form action="">
+                <div style="max-width: 800px; margin: 0 auto; display: flex; gap: 12px;">
+                <div style="flex: 1; position: relative;">
+                    <input type="text" name="search" placeholder="Search events by name, location, or keyword..."
+                        style="width: 100%; padding: 16px 20px 16px 50px; border: none; border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                    <span
+                        style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 20px;">🔍</span>
+                </div>
+                <button type="submit"
+                    style="padding: 16px 32px; background: white; color: #667eea; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); transition: all 0.3s;">Search</button>
+            </div>
+            </form>
+
 </div>

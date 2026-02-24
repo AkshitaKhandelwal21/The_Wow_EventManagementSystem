@@ -2,11 +2,12 @@ from io import BytesIO
 from django.http import HttpResponse
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, View
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 import qrcode
+from The_Wow import settings
 from dashboards.forms import CreateEventForm, EditEventForm
 from dashboards.services import get_monthly_registration_data, get_top_events
 from .models import Event, EventRegistration
@@ -14,8 +15,11 @@ from django.utils.timezone import now
 import csv
 from django.db.models import Count
 from .mixin import EventFilterMixin
+import stripe
 
 # Create your views here.
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 # ****************************** User Views ***********************************
@@ -56,31 +60,108 @@ class ViewEvent(LoginRequiredMixin, TemplateView):
         return context
     
 
-class AllEventsView(TemplateView):
+class AllEventsView(EventFilterMixin, TemplateView):
     template_name = 'user/all_events.html'
+
+    DATE_FILTER_CHOICES = [
+    ("", "Any Date"),
+    ("today", "Today"),
+    ("tomorrow", "Tomorrow"),
+    ("this-week", "This Week"),
+    ("this-month", "This Month"),
+    # ("custom", "Custom Date Range"),
+    ]
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         events = Event.objects.annotate(attendees_count=Count('registrations'))
+        events = self.filter_queryset(events)
+        context['date_choices'] = self.DATE_FILTER_CHOICES
         context['events'] = events
         return context
     
-
 
 class UserRegisterView(TemplateView):
     template_name = 'organizer/view_event.html'
 
     def post(self, request, *args, **kwargs):
         event = get_object_or_404(Event, pk=self.kwargs['pk'])
+
+        if event.price:
+            return redirect('summary', pk=event.pk)
+        
         register, created = EventRegistration.objects.get_or_create(
             user=request.user, event=event
         )
         if created:
-            if event.seats:
-                event.seats -= 1
-                event.save(update_fields=['seats'])
+            return redirect('ticket-qr', pk=register.pk)
 
-        return redirect('view_event', pk=event.pk)   
+        return redirect('view_event', pk=event.pk) 
+
+
+class PaymentSummaryView(TemplateView):
+    template_name = 'user/payment_summary.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs) 
+        context['user'] = self.request.user
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        context['pf'] = (event.price) / 100
+        context['gst'] = ((event.price) * 18) / 100
+        context['event'] = event
+        context['total'] = event.price + ((event.price) / 100) + (((event.price) * 18) / 100)
+        return context
+
+
+class CreateCheckoutSession(View):
+    def post(self, request, *args, **kwargs):
+        host = self.request.get_host()
+        event_id = request.POST.get('event_id')
+        event = get_object_or_404(Event, pk=event_id)
+
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[ 
+                {
+                    "price_data": {
+                        "currency": "inr",
+                        "product_data": {
+                            "name": event.title,
+                        },
+                        "unit_amount": int(event.price * 100),
+                    },
+                    "quantity": 1,
+                }
+                ],
+                mode='payment',
+                success_url=f"http://{host}/event/payment-success/{event.id}/",
+                cancel_url=f"http://{host}/event/{event.id}/summary/",
+            )
+        except Exception as e:
+            return HttpResponse(f"Stripe Error: {str(e)}")
+
+        return redirect(checkout_session.url, code=303)
+    
+def payment_success(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    if event.seats > 0:
+        register, created = EventRegistration.objects.get_or_create(
+            user=request.user, event=event
+        )
+        if created:
+            event.seats -= 1
+            event.save(update_fields=['seats'])
+
+            return redirect('ticket-qr', pk=register.pk)
+        
+    return redirect('view_event', pk=event.pk) 
+
+def payment_cancel(request):
+    context = {
+        'payment_status': 'cancel'
+    }
+    return render(request, 'user/success.html', context)
 
 
 class MyRegisteredEventsView(TemplateView):

@@ -29,7 +29,7 @@
                 <a href="{% url 'all_events' %}"
                     style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Browse
                     Events</a>
-                    {% if role == 'user' %}
+                    {% if user.role == 'user' %}
                 <a href="{% url 'user-dashboard' %}"
                     style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My
                     Dashboard</a>

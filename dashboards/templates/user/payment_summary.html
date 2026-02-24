@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Summary - EventHub</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f7fafc; min-height: 100vh; padding: 40px 20px; box-sizing: border-box;">
+
+    <!-- Top Navigation Bar -->
+    <nav
+        style="background: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); position: fixed; top: 0; left: 0; right: 0; z-index: 100;">
+        <div
+            style="max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; height: 70px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 24px;">🎉</span>
+                </div>
+                <h2 style="margin: 0; color: #2d3748; font-size: 22px; font-weight: 700;">EventHub</h2>
+            </div>
+            <div style="display: flex; align-items: center; gap: 25px;">
+                <!-- <a href="#" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">Browse Events</a>
+                <a href="#" style="color: #4a5568; text-decoration: none; font-weight: 600; font-size: 15px;">My Tickets</a> -->
+                <!-- <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer;">{{ user.first_name.0 }}{{ user.last_name.0 }}</div> -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div
+        style="max-width: 1000px; margin: 100px auto 40px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px;">
+
+        <!-- Left Column - Event Details & Payment Form -->
+        <div>
+
+            <!-- Progress Steps -->
+            <div
+                style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="flex: 1; text-align: center;">
+                        <div
+                            style="width: 40px; height: 40px; background: #10b981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 16px;">
+                            ✓</div>
+                        <p style="margin: 0; color: #10b981; font-size: 12px; font-weight: 600;">Event Selected</p>
+                    </div>
+                    <div style="flex: 1; height: 2px; background: #10b981; margin: 0 10px 20px;"></div>
+                    <div style="flex: 1; text-align: center;">
+                        <div
+                            style="width: 40px; height: 40px; background: #10b981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 16px;">
+                            ✓</div>
+                        <p style="margin: 0; color: #10b981; font-size: 12px; font-weight: 600;">Ticket Selected</p>
+                    </div>
+                    <div style="flex: 1; height: 2px; background: #667eea; margin: 0 10px 20px;"></div>
+                    <div style="flex: 1; text-align: center;">
+                        <div
+                            style="width: 40px; height: 40px; background: #667eea; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 16px;">
+                            3</div>
+                        <p style="margin: 0; color: #667eea; font-size: 12px; font-weight: 600;">Payment</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Summary Card -->
+            <div
+                style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px;">
+                <h2 style="margin: 0 0 20px; color: #2d3748; font-size: 20px; font-weight: 700;">Event Details</h2>
+
+                <div style="display: flex; gap: 20px;">
+                    <!-- Event Image -->
+                    <div
+                        style="flex-shrink: 0; width: 120px; height: 120px; border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden;">
+                        <img src="" alt="{{ event.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+
+                    <!-- Event Info -->
+                    <div style="flex: 1;">
+                        <span
+                            style="display: inline-block; background: #edf2f7; color: #667eea; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 8px;">
+                           {{ event.category }}</span>
+                        <h3
+                            style="margin: 0 0 12px; color: #2d3748; font-size: 18px; font-weight: 700; line-height: 1.3;">
+                            {{ event.title }}</h3>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 8px; color: #718096; font-size: 14px;">
+                                <span style="font-size: 16px;">📅</span>
+                                <span>{{ event.date|date:"l, F d, Y" }} at {{ event.time }}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; color: #718096; font-size: 14px;">
+                                <span style="font-size: 16px;">📍</span>
+                                <span>{{ event.location }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Method Selection -->
+            <div
+                style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px;">
+                <h2 style="margin: 0 0 20px; color: #2d3748; font-size: 20px; font-weight: 700;">Payment Method</h2>
+
+                <!-- <form method="POST" action=""> -->
+
+                    <!-- Payment Options -->
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;">
+
+                        <!-- Credit/Debit Card -->
+                        <label
+                            style="display: flex; align-items: center; gap: 15px; padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+                            <input type="radio" name="payment_method" value="card" checked
+                                style="width: 20px; height: 20px; cursor: pointer; accent-color: #667eea;">
+                            <div style="flex: 1;">
+                                <p style="margin: 0 0 4px; color: #2d3748; font-weight: 600; font-size: 15px;">Credit /
+                                    Debit Card</p>
+                                <p style="margin: 0; color: #718096; font-size: 13px;">Pay securely with your card</p>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <img src="https://via.placeholder.com/40x25/1434CB/FFFFFF?text=VISA" alt="Visa"
+                                    style="height: 25px; border-radius: 4px;">
+                                <img src="https://via.placeholder.com/40x25/EB001B/FFFFFF?text=MC" alt="Mastercard"
+                                    style="height: 25px; border-radius: 4px;">
+                            </div>
+                        </label>
+
+                        <!-- UPI -->
+                        <label
+                            style="display: flex; align-items: center; gap: 15px; padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+                            <input type="radio" name="payment_method" value="upi"
+                                style="width: 20px; height: 20px; cursor: pointer; accent-color: #667eea;">
+                            <div style="flex: 1;">
+                                <p style="margin: 0 0 4px; color: #2d3748; font-weight: 600; font-size: 15px;">UPI
+                                    Payment</p>
+                                <p style="margin: 0; color: #718096; font-size: 13px;">Pay via Google Pay, PhonePe,
+                                    Paytm</p>
+                            </div>
+                            <span style="font-size: 28px;">📱</span>
+                        </label>
+
+                        <!-- Net Banking -->
+                        <label
+                            style="display: flex; align-items: center; gap: 15px; padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+                            <input type="radio" name="payment_method" value="netbanking"
+                                style="width: 20px; height: 20px; cursor: pointer; accent-color: #667eea;">
+                            <div style="flex: 1;">
+                                <p style="margin: 0 0 4px; color: #2d3748; font-weight: 600; font-size: 15px;">Net
+                                    Banking</p>
+                                <p style="margin: 0; color: #718096; font-size: 13px;">Pay through your bank account</p>
+                            </div>
+                            <span style="font-size: 28px;">🏦</span>
+                        </label>
+
+                        <!-- Wallet -->
+                        <label
+                            style="display: flex; align-items: center; gap: 15px; padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+                            <input type="radio" name="payment_method" value="wallet"
+                                style="width: 20px; height: 20px; cursor: pointer; accent-color: #667eea;">
+                            <div style="flex: 1;">
+                                <p style="margin: 0 0 4px; color: #2d3748; font-weight: 600; font-size: 15px;">Digital
+                                    Wallet</p>
+                                <p style="margin: 0; color: #718096; font-size: 13px;">Paytm, Amazon Pay, or other
+                                    wallets</p>
+                            </div>
+                            <span style="font-size: 28px;">💳</span>
+                        </label>
+                    </div>
+
+                    <!-- Terms & Conditions -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: flex; align-items: start; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" required
+                                style="width: 18px; height: 18px; margin-top: 2px; cursor: pointer; accent-color: #667eea;">
+                            <span style="color: #4a5568; font-size: 14px; line-height: 1.5;">
+                                I agree to the <a href="#"
+                                    style="color: #667eea; text-decoration: none; font-weight: 600;">Terms &
+                                    Conditions</a> and <a href="#"
+                                    style="color: #667eea; text-decoration: none; font-weight: 600;">Cancellation
+                                    Policy</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <form action="{% url 'checkout' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="event_id" value="{{ event.id }}">
+                        <button type="submit">
+                            Proceed to Pay Rs. {{ total }}
+                        </button>
+                    </form>
+                <!-- </form> -->
+            </div>
+
+            <!-- Security Badge -->
+            <div
+                style="display: flex; align-items: center; justify-content: center; gap: 15px; color: #718096; font-size: 13px;">
+                <span style="display: flex; align-items: center; gap: 5px;"><span>🔒</span> Secure Payment</span>
+                <span>•</span>
+                <span style="display: flex; align-items: center; gap: 5px;"><span>✓</span> SSL Encrypted</span>
+                <span>•</span>
+                <span style="display: flex; align-items: center; gap: 5px;"><span>🛡️</span> PCI Compliant</span>
+            </div>
+
+        </div>
+
+        <!-- Right Column - Order Summary -->
+        <div>
+
+            <!-- Order Summary Card -->
+            <div
+                style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 90px;">
+                <h2 style="margin: 0 0 20px; color: #2d3748; font-size: 20px; font-weight: 700;">Order Summary</h2>
+
+                <!-- Ticket Details -->
+                <div style="padding-bottom: 20px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <p style="margin: 0 0 5px; color: #2d3748; font-weight: 600; font-size: 15px;">{{
+                                ticket_type }}</p>
+                            <p style="margin: 0; color: #718096; font-size: 13px;">Price: </p>
+                        </div>
+                        <p style="margin: 0; color: #2d3748; font-weight: 700; font-size: 16px;">Rs. {{ event.price }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Price Breakdown -->
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #718096; font-size: 14px;">Subtotal</span>
+                        <span style="color: #2d3748; font-weight: 600; font-size: 14px;">Rs. {{ event.price }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #718096; font-size: 14px;">Platform Fee</span>
+                        <span style="color: #2d3748; font-weight: 600; font-size: 14px;">Rs. {{ pf }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #718096; font-size: 14px;">GST (18%)</span>
+                        <span style="color: #2d3748; font-weight: 600; font-size: 14px;">Rs. {{ gst }}</span>
+                    </div>
+                </div>
+
+                <!-- Discount Code -->
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" placeholder="Enter promo code"
+                            style="flex: 1; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; outline: none;">
+                        <button
+                            style="padding: 12px 20px; background: #f7fafc; color: #667eea; border: 2px solid #667eea; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div
+                    style="padding: 20px; background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border-radius: 12px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #2d3748; font-size: 18px; font-weight: 700;">Total Amount</span>
+                        <span style="color: #667eea; font-size: 24px; font-weight: 700;">Rs. {{ total }}</span>
+                    </div>
+                </div>
+
+                <!-- What's Included -->
+                <div style="background: #f8fafc; border-radius: 12px; padding: 20px;">
+                    <p style="margin: 0 0 12px; color: #2d3748; font-size: 14px; font-weight: 700;">What's Included:</p>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="color: #10b981; font-size: 16px;">✓</span>
+                            <span style="color: #4a5568; font-size: 13px;">Event Entry Pass</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="color: #10b981; font-size: 16px;">✓</span>
+                            <span style="color: #4a5568; font-size: 13px;">Digital Ticket via Email</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="color: #10b981; font-size: 16px;">✓</span>
+                            <span style="color: #4a5568; font-size: 13px;">QR Code for Check-in</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="color: #10b981; font-size: 16px;">✓</span>
+                            <span style="color: #4a5568; font-size: 13px;">Event Updates & Reminders</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cancellation Policy -->
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                    <p style="margin: 0 0 8px; color: #2d3748; font-size: 13px; font-weight: 700;">Cancellation Policy:
+                    </p>
+                    <p style="margin: 0; color: #718096; font-size: 12px; line-height: 1.6;">Free cancellation up to 48
+                        hours before the event. After that, a 20% processing fee applies.</p>
+                </div>
+
+                <!-- Support -->
+                <div style="margin-top: 20px; text-align: center; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                    <p style="margin: 0 0 8px; color: #2d3748; font-size: 13px; font-weight: 600;">Need Help?</p>
+                    <a href="" style="color: #667eea; text-decoration: none; font-size: 13px; font-weight: 600;">Contact
+                        Support →</a>
+                    <br>
+                    <a href="{% url 'view_event' event.pk %}"
+                        style="color: #667eea; text-decoration: none; font-size: 13px; font-weight: 600;">Cancel →</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

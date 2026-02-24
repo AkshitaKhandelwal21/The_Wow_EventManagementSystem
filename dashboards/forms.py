@@ -4,7 +4,7 @@ from .models import Event, EventRegistration
 class CreateEventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'description', 'category', 'duration', 'seats', 'location', 'date', 'time', 'venue', 'image']
+        fields = ['title', 'description', 'category', 'duration', 'seats', 'location', 'date', 'time', 'venue', 'image', 'price']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -30,6 +30,9 @@ class CreateEventForm(forms.ModelForm):
                 'class': 'form-control'
             }),
             'seats': forms.NumberInput(attrs={
+                'class': 'form-control'
+            }),
+            'price': forms.NumberInput(attrs={
                 'class': 'form-control'
             }),
             'venue': forms.TextInput(attrs={

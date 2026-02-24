@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.0/build/css/intlTelInput.css">
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f7fafc; min-height: 100vh;">
     
@@ -87,7 +88,7 @@
                     <!-- Phone -->
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; margin-bottom: 8px; color: #2d3748; font-size: 14px; font-weight: 600;">Phone Number</label>
-                        <input type="tel" name="phone" value="{{ user.phone }}" style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s; box-sizing: border-box; outline: none;" onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'" placeholder="+1 (555) 123-4567">
+                        <input type="tel" id="phone" name="phone" value="{{ user.phone }}" style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s; box-sizing: border-box; outline: none;" onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'" placeholder="+1 (555) 123-4567">
                     </div>
 
                     <!-- Gender -->
@@ -160,3 +161,35 @@
     <!-- Footer -->
     <footer style="background: #2d3748; color: white; padding: 50px 0; margin-top: 60px;">
         <div style="max-width: 1400px; margin: 0 auto; padding: 0 40px; text-align: center;">
+
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.0/build/js/intlTelInput.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const input = document.querySelector("#phone");
+
+    const iti = window.intlTelInput(input, {
+        initialCountry: "auto",
+        separateDialCode: true,   // shows dropdown separately
+        nationalMode: true,       // user types only local number
+        autoHideDialCode: false,
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.0/build/js/utils.js"
+    });
+
+    // 🔥 IMPORTANT: When editing existing user
+    if (input.value) {
+        iti.setNumber(input.value); // splits +919876543210 correctly
+    }
+
+    // 🔥 Before form submit → combine back to full number
+    const form = input.closest("form");
+
+    form.addEventListener("submit", function () {
+        if (iti.isValidNumber()) {
+            input.value = iti.getNumber(); // saves +919876543210
+        }
+    });
+
+});
+</script>
