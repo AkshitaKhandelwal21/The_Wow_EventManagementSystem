@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue - EventHub</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f7fafc; min-height: 100vh;">
+
+    <!-- Sidebar -->
+    {% include 'org_lhn.html' %}
+    <!-- Main Content -->
+    <div style="margin-left: 260px; padding: 40px;">
+
+        <!-- Page Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px;">
+            <div>
+                <h1 style="margin: 0 0 8px; color: #2d3748; font-size: 32px; font-weight: 700;">Revenue & Earnings</h1>
+                <p style="margin: 0; color: #718096; font-size: 15px;">Track your earnings and manage payouts</p>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <select style="padding: 12px 18px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; color: #4a5568; outline: none; cursor: pointer; background: white; font-weight: 500;">
+                    <option>Last 30 Days</option>
+                    <option>Last 7 Days</option>
+                    <option>Last 3 Months</option>
+                    <option>Last Year</option>
+                    <option>All Time</option>
+                </select>
+                <button style="padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(102,126,234,0.4);">
+                    <span>📥</span> Export Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Revenue Stats Cards -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 35px;">
+            
+            <!-- Total Revenue -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                    <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;">💵</div>
+                    <span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">{{ total_revenue_growth }}%</span>
+                </div>
+                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 30px; font-weight: 700;">Rs. {{ total_revenue }}</h3>
+                <p style="margin: 0; color: #718096; font-size: 14px; font-weight: 500;">Total Revenue</p>
+            </div>
+
+            <!-- Pending Payout -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                    <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;">⏳</div>
+                </div>
+                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 30px; font-weight: 700;">Rs. {{ pending_payout }}</h3>
+                <p style="margin: 0; color: #718096; font-size: 14px; font-weight: 500;">Pending Payout</p>
+            </div>
+
+            <!-- Paid Out -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;">✓</div>
+                </div>
+                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 30px; font-weight: 700;">Rs. {{ paid_out }}</h3>
+                <p style="margin: 0; color: #718096; font-size: 14px; font-weight: 500;">Paid Out</p>
+            </div>
+
+            <!-- Tickets Sold -->
+            <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                    <div style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;">🎟️</div>
+                </div>
+                <h3 style="margin: 0 0 5px; color: #2d3748; font-size: 30px; font-weight: 700;">{{ tickets_sold }}</h3>
+                <p style="margin: 0; color: #718096; font-size: 14px; font-weight: 500;">Tickets Sold</p>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-bottom: 30px;">
+
+            <!-- Revenue Chart -->
+            <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <div>
+                        <h2 style="margin: 0 0 5px; color: #2d3748; font-size: 20px; font-weight: 700;">Revenue Trends</h2>
+                        <p style="margin: 0; color: #718096; font-size: 13px;">Monthly earnings overview</p>
+                    </div>
+                    <span style="display: flex; align-items: center; gap: 5px; color: #718096; font-size: 13px;">
+                        <span style="width: 12px; height: 12px; background: #10b981; border-radius: 3px; display: inline-block;"></span>Revenue
+                    </span>
+                </div>
+                <!-- Revenue Bars -->
+                <div style="display: flex; align-items: flex-end; gap: 12px; height: 220px; padding: 0 10px;">
+                    {% for month in monthly_revenue %}
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;">
+                        <div style="width: 100%; background: linear-gradient(to top, #10b981, #34d399); border-radius: 6px 6px 0 0; height: {{ month.percentage }}%; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px;">
+                            <span style="color: white; font-size: 11px; font-weight: 700;">{{ month.amount_short }}</span>
+                        </div>
+                        <span style="color: #94a3b8; font-size: 11px; font-weight: 600;">{{ month.label }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Payout Schedule -->
+            <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                <h2 style="margin: 0 0 5px; color: #2d3748; font-size: 20px; font-weight: 700;">Next Payout</h2>
+                <p style="margin: 0 0 25px; color: #718096; font-size: 13px;">Scheduled payments</p>
+                
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 2px solid rgba(102,126,234,0.2);">
+                    <p style="margin: 0 0 8px; color: #718096; font-size: 12px; font-weight: 600; text-transform: uppercase;">Payout Date</p>
+                    <p style="margin: 0 0 15px; color: #2d3748; font-size: 20px; font-weight: 700;">{{ next_payout_date|date:"M d, Y" }}</p>
+                    <p style="margin: 0 0 8px; color: #718096; font-size: 12px; font-weight: 600; text-transform: uppercase;">Amount</p>
+                    <p style="margin: 0; color: #667eea; font-size: 28px; font-weight: 700;">Rs. {{ next_payout_amount }}</p>
+                </div>
+
+                <div style="background: #f8fafc; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+                    <p style="margin: 0 0 8px; color: #2d3748; font-size: 13px; font-weight: 600;">Payout Method</p>
+                    <p style="margin: 0; color: #718096; font-size: 13px;">{{ payout_method|default:"Bank Transfer" }}</p>
+                </div>
+
+                <button style="width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>⚙️</span> Manage Payout Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Revenue by Event Table -->
+        <div style="background: white; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 30px;">
+            <div style="padding: 25px 30px; border-bottom: 2px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; color: #2d3748; font-size: 20px; font-weight: 700;">Revenue by Event</h2>
+                <div style="display: flex; gap: 10px;">
+                    <select style="padding: 8px 14px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 13px; color: #4a5568; outline: none; cursor: pointer; background: white;">
+                        <option>All Events</option>
+                        {% for event in events %}
+                        <option value="{{ event.pk }}">{{ event.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8fafc;">
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Event</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Date</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Tickets Sold</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Gross Revenue</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Platform Fee</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Net Revenue</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event_revenue in revenue_by_event %}
+                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 18px 30px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 50px; height: 50px; border-radius: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden; flex-shrink: 0;">
+                                        {% if event_revenue.image %}
+                                        <img src="{{ event_revenue.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <p style="margin: 0 0 3px; color: #2d3748; font-weight: 600; font-size: 14px;">{{ event_revenue.title }}</p>
+                                        <p style="margin: 0; color: #718096; font-size: 12px;">{{ event_revenue.category }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                <p style="margin: 0; color: #475569; font-size: 14px;">{{ event_revenue.date|date:"M d, Y" }}</p>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                <p style="margin: 0; color: #2d3748; font-size: 14px; font-weight: 600;">{{ event_revenue.tickets_sold }}</p>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                <p style="margin: 0; color: #2d3748; font-size: 14px; font-weight: 600;">Rs. {{ event_revenue.gross_revenue }}</p>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                <p style="margin: 0; color: #dc2626; font-size: 14px; font-weight: 600;">-Rs. {{ event_revenue.platform_fee }}</p>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                <p style="margin: 0; color: #10b981; font-size: 15px; font-weight: 700;">Rs. {{ event_revenue.net_revenue }}</p>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                {% if event_revenue.payout_status == 'paid' %}
+                                <span style="background: #d1fae5; color: #065f46; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">✓ Paid</span>
+                                {% elif event_revenue.payout_status == 'pending' %}
+                                <span style="background: #fef3c7; color: #92400e; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">⏳ Pending</span>
+                                {% else %}
+                                <span style="background: #e0e7ff; color: #4338ca; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">📅 Scheduled</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" style="padding: 60px 30px; text-align: center;">
+                                <div style="font-size: 48px; margin-bottom: 12px;">💰</div>
+                                <p style="margin: 0; color: #718096; font-size: 15px;">No revenue data yet</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div style="background: white; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; overflow: hidden;">
+            <div style="padding: 25px 30px; border-bottom: 2px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; color: #2d3748; font-size: 20px; font-weight: 700;">Recent Transactions</h2>
+                <a href="#" style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">View All →</a>
+            </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8fafc;">
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Transaction ID</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Date</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Type</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Description</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Amount</th>
+                            <th style="padding: 14px 30px; text-align: left; color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in recent_transactions %}
+                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 18px 30px;">
+                                <p style="margin: 0; color: #667eea; font-size: 13px; font-weight: 600; font-family: monospace;">#{{ transaction.id }}</p>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                <p style="margin: 0; color: #475569; font-size: 14px;">{{ transaction.date|date:"M d, Y" }}</p>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                {% if transaction.type == 'payout' %}
+                                <span style="background: #dbeafe; color: #1e40af; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">Payout</span>
+                                {% else %}
+                                <span style="background: #dcfce7; color: #166534; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">Sale</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                <p style="margin: 0; color: #2d3748; font-size: 14px;">{{ transaction.description }}</p>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                <p style="margin: 0; color: #10b981; font-size: 15px; font-weight: 700;">Rs. {{ transaction.amount }}</p>
+                            </td>
+                            <td style="padding: 18px 30px;">
+                                {% if transaction.status == 'completed' %}
+                                <span style="background: #d1fae5; color: #065f46; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">✓ Completed</span>
+                                {% else %}
+                                <span style="background: #fef3c7; color: #92400e; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">⏳ Processing</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" style="padding: 60px 30px; text-align: center;">
+                                <div style="font-size: 48px; margin-bottom: 12px;">📋</div>
+                                <p style="margin: 0; color: #718096; font-size: 15px;">No transactions yet</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

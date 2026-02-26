@@ -43,6 +43,7 @@ class EventRegistration(TimeStamps, models.Model):
     user = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, related_name='event_reg')
     event = models.ForeignKey('Event', on_delete=models.CASCADE, related_name='registrations')
     qr_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    payment_status = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
@@ -51,5 +52,3 @@ class EventRegistration(TimeStamps, models.Model):
                 name="unique_event_registration"
             )
         ]
-
-

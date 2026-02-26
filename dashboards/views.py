@@ -10,12 +10,15 @@ import qrcode
 from The_Wow import settings
 from dashboards.forms import CreateEventForm, EditEventForm
 from dashboards.services import get_monthly_registration_data, get_top_events
+from dashboards.tasks import follow_email_to_guests
 from .models import Event, EventRegistration
 from django.utils.timezone import now
 import csv
-from django.db.models import Count
+from django.db.models import Count, Sum
 from .mixin import EventFilterMixin
 import stripe
+import datetime
+from django.utils import timezone
 
 # Create your views here.
 
@@ -51,8 +54,8 @@ class ViewEvent(LoginRequiredMixin, TemplateView):
         context['registration'] = registration
         context['is_reg'] = registration is not None
 
-        attendees = EventRegistration.objects.filter(event=event).count()
-        context['attendees'] = attendees
+        guests = EventRegistration.objects.filter(event=event).count()
+        context['guests'] = guests
         today = now().date()
         context['similar_events'] = Event.objects.filter(
             category = event.category, date__gte=today
@@ -74,11 +77,21 @@ class AllEventsView(EventFilterMixin, TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        events = Event.objects.annotate(attendees_count=Count('registrations'))
+        events = Event.objects.annotate(guests_count=Count('registrations'))
         events = self.filter_queryset(events)
         context['date_choices'] = self.DATE_FILTER_CHOICES
         context['events'] = events
         return context
+    
+
+class RevenueView(TemplateView):
+    template_name = 'organizer/revenue.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_revenue'] = EventRegistration.objects.filter(
+            event__user = self.request.user, payment_status = True, event_price__isnull = False
+        ).aaggregate(total_revenue=Sum())
     
 
 class UserRegisterView(TemplateView):
@@ -228,7 +241,7 @@ class OrganizerDashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_events'] = Event.objects.filter(user=self.request.user).count()
-        context['total_attendees'] = EventRegistration.objects.filter(
+        context['total_guests'] = EventRegistration.objects.filter(
             event__user=self.request.user).count()
         return context
     
@@ -247,7 +260,16 @@ class CreateEventView(LoginRequiredMixin, TemplateView):
             event = form.save(commit=False)
             event.user = request.user
             event.save()
+
+            event_datetime = datetime.combine(event.date, event.time)
+            reminder = event_datetime - datetime.timedelta(hours=24)
+            if reminder > timezone.now():
+                follow_email_to_guests.apply_async(
+                    args=[event.id], eta=reminder
+                )
+
             return redirect('org-dashboard')
+        
         return self.render_to_response({'form': form})
 
 
@@ -257,7 +279,7 @@ class MyEventsView(LoginRequiredMixin, EventFilterMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         events = Event.objects.filter(user=self.request.user).annotate(
-            attendees=Count('registrations'))
+            guests=Count('registrations'))
         events = self.filter_queryset(events)
         context['events'] = events
         context['categories'] = Event.Category.choices
@@ -293,22 +315,22 @@ class DeleteEventView(LoginRequiredMixin, View):
         return redirect('my_events')
     
 
-class AttendeesListView(TemplateView):
-    template_name = 'organizer/attendees.html'
+class GuestsListView(TemplateView):
+    template_name = 'organizer/guests.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = get_object_or_404(Event, pk=self.kwargs['pk'], user=self.request.user)
-        attendees = EventRegistration.objects.filter(event=event).select_related('user')
-        context['attendees'] = attendees
+        guests = EventRegistration.objects.filter(event=event).select_related('user')
+        context['guests'] = guests
         context['event'] = event
-        context['total_attendees'] = attendees.count()
+        context['total_guests'] = guests.count()
         return context
 
-class ExportAttendeesCSVView(View):
+class ExportGuestsCSVView(View):
     def get(self, request, *args, **kwargs):
         response = HttpResponse(content_type='text/csv')
-        response['Content-Dispostion'] = 'attachment; filename="attendees_list.csv"'
+        response['Content-Dispostion'] = 'attachment; filename="guests_list.csv"'
 
         writer = csv.writer(response)
         writer.writerow(['Event Title', 'Attendee Name', 'Email', 'Phone', 'Registered On'])
@@ -322,6 +344,17 @@ class ExportAttendeesCSVView(View):
                 ])
 
         return response
+    
+
+class FollowUpMailView(View):
+    def post(self, request, id):
+        event = get_object_or_404(Event, id=id)
+
+        if event.user != request.user:
+            return redirect('view_event', pk=id)
+        
+        follow_email_to_guests(id)
+        return redirect('org-dashboard')
 
 
 class AnalyticsView(TemplateView):
@@ -330,7 +363,7 @@ class AnalyticsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_events'] = Event.objects.filter(user=self.request.user).count()
-        context['total_attendees'] = EventRegistration.objects.filter(
+        context['total_guests'] = EventRegistration.objects.filter(
             event__user=self.request.user).count()
         context['monthly_data'] = get_monthly_registration_data(self.request.user)
         context['top_events'] = get_top_events(self.request.user)

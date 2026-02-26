@@ -20,9 +20,11 @@ urlpatterns = [
     path('my_events/', views.MyEventsView.as_view(), name='my_events'),   
     path('edit_event/<int:pk>/', views.EditEventView.as_view(), name='edit_event'),
     path('delete_event/<int:pk>/', views.DeleteEventView.as_view(), name='delete_event'),
-    path('attendees/<int:pk>', views.AttendeesListView.as_view(), name='attendees'),
-    path('event/export-attendees/', views.ExportAttendeesCSVView.as_view(), name='export_attendees_csv'),
+    path('guests/<int:pk>', views.GuestsListView.as_view(), name='guests'),
+    path('event/export-guests/', views.ExportGuestsCSVView.as_view(), name='export_guests_csv'),
+    path('<int:id>/followup/', views.FollowUpMailView.as_view(), name='followup'),
     path('analytics/', views.AnalyticsView.as_view(), name='analytics'),
+    path('revenue/', views.RevenueView.as_view(), name='revenue'),
 
     path('admin_dash/', views.AdmindashboardView.as_view(), name='admin-dashboard'),
 ]

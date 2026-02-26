@@ -48,7 +48,7 @@ def get_top_events(user, limit=3):
         Event.objects
         .filter(user=user)
         .annotate(
-            attendees_count=Count('registrations'),
+            guests_count=Count('registrations'),
 
             revenue=ExpressionWrapper(
                 Cast(Count('registrations'), DecimalField()) *
@@ -60,12 +60,12 @@ def get_top_events(user, limit=3):
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             )
         )
-        .order_by('-attendees_count')[:limit]
+        .order_by('-guests_count')[:limit]
     )
 
     for event in events:
         if event.seats and event.seats > 0:
-            event.occupancy = int((event.attendees_count / event.seats) * 100)
+            event.occupancy = int((event.guests_count / event.seats) * 100)
         else:
             event.occupancy = 0
 
